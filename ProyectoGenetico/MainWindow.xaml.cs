@@ -84,6 +84,8 @@ namespace ProyectoGenetico
                 obtenerDistancias();
             });
 
+            //elegir cantidad de población para cuando son menos de 7 ciudades
+            // y establecer 100 de población por default
             try
             {
                 cantPoblación = Convert.ToInt32(nPoblacion.Text);
@@ -105,10 +107,10 @@ namespace ProyectoGenetico
                 ProcesoSelección();
             });
 
-            MostrarRutasPob(Población, listBox, cantPoblación, cantidadPuntos);
-            MostrarRutasPob(Población2, listBox2, cantPoblación, cantidadPuntos);
-            MostrarRutasPob(distancias, listBoxDistancias, cantidadPuntos, cantidadPuntos-2);
-            MostrarMejor();
+            await MostrarRutasPob(Población, listBox, cantPoblación, cantidadPuntos);
+            await MostrarRutasPob(Población2, listBox2, cantPoblación, cantidadPuntos);
+            await MostrarRutasPob(distancias, listBoxDistancias, cantidadPuntos, cantidadPuntos - 2);
+            await MostrarMejor();
             await RedibujarPuntos();
             await DibujarRuta();
         }
@@ -272,7 +274,7 @@ namespace ProyectoGenetico
             
         }
 
-        private void MostrarRutasPob(int[,] pob, ListBox lb, int cantX, int cantY)
+        private async Task MostrarRutasPob(int[,] pob, ListBox lb, int cantX, int cantY)
         {
             lb.Items.Clear();
             for (int i = 0; i < cantX; i++)
@@ -287,7 +289,7 @@ namespace ProyectoGenetico
             }
         }
 
-        private void MostrarMejor()
+        private async Task MostrarMejor()
         {
             string mejor = "";
             for (int i = 0; i < cantidadPuntos + 1; i++)
