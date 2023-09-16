@@ -57,8 +57,8 @@ namespace ProyectoGenetico
                 StrokeThickness = 1
             };
 
-            Canvas.SetLeft(ellipse, mousePosition.X);
-            Canvas.SetTop(ellipse, mousePosition.Y);
+            Canvas.SetLeft(ellipse, mousePosition.X-4);
+            Canvas.SetTop(ellipse, mousePosition.Y-3);
 
             if (primerPunto)
             {
@@ -109,6 +109,8 @@ namespace ProyectoGenetico
             MostrarRutasPob(Población2, listBox2, cantPoblación, cantidadPuntos);
             MostrarRutasPob(distancias, listBoxDistancias, cantidadPuntos, cantidadPuntos-2);
             MostrarMejor();
+            await RedibujarPuntos();
+            await DibujarRuta();
         }
 
         private void obtenerDistancias()
@@ -221,6 +223,53 @@ namespace ProyectoGenetico
             {
                 mejorSolucionGlobal[a] = Población[filaActual, a];
             }
+        }
+
+        private async Task RedibujarPuntos()
+        {
+            canvas.Children.Clear();
+            for (int i = 0; i < coordenadas.Count; i++)
+            {
+                Ellipse ellipse = new Ellipse
+                {
+                    Width = 10,
+                    Height = 10,
+                    Stroke = Brushes.Black,
+                    StrokeThickness = 1
+                };
+
+                Canvas.SetLeft(ellipse, coordenadas[i].Item1);
+                Canvas.SetTop(ellipse, coordenadas[i].Item2);
+
+                if(i == 0)
+                {
+                    ellipse.Fill = Brushes.Red;
+                }
+                else
+                {
+                    ellipse.Fill = Brushes.Black;
+                }
+
+                canvas.Children.Add(ellipse);
+            }
+        }
+
+        private async Task DibujarRuta()
+        {
+            for(int i = 0; i < mejorSolucionGlobal.Length - 2; i++)
+            {
+                Line línea = new Line();
+                línea.X1 = coordenadas[mejorSolucionGlobal[i]].Item1 + 5;
+                línea.Y1 = coordenadas[mejorSolucionGlobal[i]].Item2 + 5;
+                línea.X2 = coordenadas[mejorSolucionGlobal[i + 1]].Item1 + 5;
+                línea.Y2 = coordenadas[mejorSolucionGlobal[i + 1]].Item2 + 5;
+                línea.Stroke = Brushes.Green;
+                línea.StrokeThickness = 2;
+
+                // Agregar la línea al Canvas
+                canvas.Children.Add(línea);
+            }
+            
         }
 
         private void MostrarRutasPob(int[,] pob, ListBox lb, int cantX, int cantY)
