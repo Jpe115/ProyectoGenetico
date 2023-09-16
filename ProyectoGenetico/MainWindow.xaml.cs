@@ -77,7 +77,7 @@ namespace ProyectoGenetico
             btnMostrar.IsEnabled = true;
         }
 
-        private async void MostrarMatrizDistancias(object sender, RoutedEventArgs e)
+        private async void Ejecutar(object sender, RoutedEventArgs e)
         {
             await Task.Run(() =>
             {
