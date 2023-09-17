@@ -292,10 +292,11 @@ namespace ProyectoGenetico
         private async Task MostrarMejor()
         {
             string mejor = "";
-            for (int i = 0; i < cantidadPuntos + 1; i++)
+            for (int i = 0; i < cantidadPuntos; i++)
             {
-                mejor += mejorSolucionGlobal[i] + " ";
+                mejor += mejorSolucionGlobal[i] + ", ";
             }
+            mejor += mejorSolucionGlobal[cantidadPuntos] + " ";
             mejor += "= " + mejorSolucionGlobal[cantidadPuntos + 1];
             tBoxSolución.Text = mejor;
         }
