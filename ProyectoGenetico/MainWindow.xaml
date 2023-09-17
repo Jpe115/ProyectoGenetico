@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProyectoGenetico"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="1100">
+        Title="Proyecto genético" Height="600" Width="1100">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1.5*"/>
@@ -46,7 +46,7 @@
         </StackPanel>
 
         <TextBlock Grid.Row="2" Grid.Column="3" Text="Distancias:" FontWeight="DemiBold" FontSize="15" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,3"/>
-        
+
         <ScrollViewer Grid.Column="3" Grid.Row="3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
             <ListBox x:Name="listBoxDistancias"/>
         </ScrollViewer>
@@ -54,7 +54,7 @@
         <ScrollViewer Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                 <TextBlock Text="Mejor solución:" FontWeight="DemiBold" FontSize="15" Margin="5" VerticalAlignment="Center"/>
-                <TextBox x:Name="tBoxSolución" IsReadOnly="True" VerticalAlignment="Center" FontSize="15" Text="holax2"/>
+                <TextBox x:Name="tBoxSolución" Text="Por encontrar" IsReadOnly="True" VerticalAlignment="Center" FontSize="15"/>
             </StackPanel>
         </ScrollViewer>
 
