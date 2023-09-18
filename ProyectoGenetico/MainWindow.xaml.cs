@@ -81,6 +81,7 @@ namespace ProyectoGenetico
 
         private async void Ejecutar(object sender, RoutedEventArgs e)
         {
+            canvas.IsEnabled = false;
             await Task.Run(obtenerDistancias);
 
             //elegir cantidad de población para cuando son menos de 7 ciudades
@@ -127,6 +128,8 @@ namespace ProyectoGenetico
             Thread th2 = new Thread(MostrarMejor);
             th1.Start();
             th2.Start();
+
+            canvas.IsEnabled = true;
         }
 
         private void obtenerDistancias()
