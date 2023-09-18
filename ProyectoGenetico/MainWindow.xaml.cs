@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,13 +24,14 @@ namespace ProyectoGenetico
         private List<(int, int)> coordenadas = new List<(int, int)>();
         private bool primerPunto = true;
         private string matrizMostrar = "";
-        private int[,] distancias;
+        private int[,] distancias = new int[1, 1];
         private int cantidadPuntos = 0;
         private int cantPoblación;
-        private int[,] Población;
-        private Random rand = new Random();        
-        private int[] mejorSolucionGlobal;
-        private int[,] Población2;
+        private int[,] Población = new int[1, 1];
+        private Random rand = new Random();
+        private int[] mejorSolucionGlobal = new int[1];
+        private int[,] Población2 = new int[1, 1];
+        private string mejor = "";
 
         private Dictionary<int, int> poblacionesChicas = new Dictionary<int, int> {
             { 1, 1 },
@@ -42,7 +44,7 @@ namespace ProyectoGenetico
 
         public MainWindow()
         {
-            InitializeComponent();
+            InitializeComponent();            
         }
 
         private void Canvas_PintarPunto(object sender, MouseButtonEventArgs e)
@@ -79,10 +81,7 @@ namespace ProyectoGenetico
 
         private async void Ejecutar(object sender, RoutedEventArgs e)
         {
-            await Task.Run(() =>
-            {
-                obtenerDistancias();
-            });
+            await Task.Run(obtenerDistancias);
 
             //elegir cantidad de población para cuando son menos de 7 ciudades
             // y establecer 100 de población por default
@@ -107,12 +106,27 @@ namespace ProyectoGenetico
                 ProcesoSelección();
             });
 
-            await MostrarRutasPob(Población, listBox, cantPoblación, cantidadPuntos);
-            await MostrarRutasPob(Población2, listBox2, cantPoblación, cantidadPuntos);
-            await MostrarRutasPob(distancias, listBoxDistancias, cantidadPuntos, cantidadPuntos - 2);
-            await MostrarMejor();
-            await RedibujarPuntos();
-            await DibujarRuta();
+            //Cambios a los listBox
+            listBox.Items.Clear();
+            listBox2.Items.Clear();
+            listBoxDistancias.Items.Clear();
+            await Task.Run(() =>
+            {
+                MostrarRutasPob(Población, listBox, cantPoblación, cantidadPuntos);
+                MostrarRutasPob(Población2, listBox2, cantPoblación, cantidadPuntos);
+                MostrarRutasPob(distancias, listBoxDistancias, cantidadPuntos, cantidadPuntos - 2);
+            });
+
+            //Cambios al canvas
+            canvas.Children.Clear();
+            Thread th1 = new Thread(() =>
+            {
+                RedibujarPuntos();
+                DibujarRuta();
+            });
+            Thread th2 = new Thread(MostrarMejor);
+            th1.Start();
+            th2.Start();
         }
 
         private void obtenerDistancias()
@@ -227,56 +241,61 @@ namespace ProyectoGenetico
             }
         }
 
-        private async Task RedibujarPuntos()
+        private void RedibujarPuntos()
         {
-            canvas.Children.Clear();
             for (int i = 0; i < coordenadas.Count; i++)
-            {
-                Ellipse ellipse = new Ellipse
+            {              
+                Dispatcher.Invoke(new Action(() =>
                 {
-                    Width = 10,
-                    Height = 10,
-                    Stroke = Brushes.Black,
-                    StrokeThickness = 1
-                };
+                    Ellipse ellipse = new Ellipse
+                    {
+                        Width = 10,
+                        Height = 10,
+                        Stroke = Brushes.Black,
+                        StrokeThickness = 1
+                    };
 
-                Canvas.SetLeft(ellipse, coordenadas[i].Item1);
-                Canvas.SetTop(ellipse, coordenadas[i].Item2);
+                    Canvas.SetLeft(ellipse, coordenadas[i].Item1);
+                    Canvas.SetTop(ellipse, coordenadas[i].Item2);
 
-                if(i == 0)
-                {
-                    ellipse.Fill = Brushes.Red;
-                }
-                else
-                {
-                    ellipse.Fill = Brushes.Black;
-                }
+                    if (i == 0)
+                    {
+                        ellipse.Fill = Brushes.Red;
+                    }
+                    else
+                    {
+                        ellipse.Fill = Brushes.Black;
+                    }
 
-                canvas.Children.Add(ellipse);
+                    canvas.Children.Add(ellipse);
+                }));
             }
         }
 
-        private async Task DibujarRuta()
+        private void DibujarRuta()
         {
             for(int i = 0; i < mejorSolucionGlobal.Length - 2; i++)
-            {
-                Line línea = new Line();
-                línea.X1 = coordenadas[mejorSolucionGlobal[i]].Item1 + 5;
-                línea.Y1 = coordenadas[mejorSolucionGlobal[i]].Item2 + 5;
-                línea.X2 = coordenadas[mejorSolucionGlobal[i + 1]].Item1 + 5;
-                línea.Y2 = coordenadas[mejorSolucionGlobal[i + 1]].Item2 + 5;
-                línea.Stroke = Brushes.Green;
-                línea.StrokeThickness = 2;
-
+            {   
                 // Agregar la línea al Canvas
-                canvas.Children.Add(línea);
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    Line línea = new Line();
+                    línea.X1 = coordenadas[mejorSolucionGlobal[i]].Item1 + 5;
+                    línea.Y1 = coordenadas[mejorSolucionGlobal[i]].Item2 + 5;
+                    línea.X2 = coordenadas[mejorSolucionGlobal[i + 1]].Item1 + 5;
+                    línea.Y2 = coordenadas[mejorSolucionGlobal[i + 1]].Item2 + 5;
+                    línea.Stroke = Brushes.Green;
+                    línea.StrokeThickness = 2;
+
+                    canvas.Children.Add(línea);
+                }));
             }
             
         }
 
-        private async Task MostrarRutasPob(int[,] pob, ListBox lb, int cantX, int cantY)
+        private void MostrarRutasPob(int[,] pob, ListBox lb, int cantX, int cantY)
         {
-            lb.Items.Clear();
+            //lb.Items.Clear();
             for (int i = 0; i < cantX; i++)
             {
                 matrizMostrar = "";
@@ -285,20 +304,29 @@ namespace ProyectoGenetico
                     matrizMostrar += (pob[i, j] + ",    ");
                 }
                 matrizMostrar += "\n";
-                lb.Items.Add(matrizMostrar);
+
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    lb.Items.Add(matrizMostrar);
+                }));
             }
         }
 
-        private async Task MostrarMejor()
+        private void MostrarMejor()
         {
-            string mejor = "";
+            mejor = "";
             for (int i = 0; i < cantidadPuntos; i++)
             {
                 mejor += mejorSolucionGlobal[i] + ", ";
             }
             mejor += mejorSolucionGlobal[cantidadPuntos] + " ";
             mejor += "= " + mejorSolucionGlobal[cantidadPuntos + 1];
-            tBoxSolución.Text = mejor;
+
+            // Utiliza Dispatcher para actualizar el TextBox en el hilo de la IU principal
+            Dispatcher.Invoke(() =>
+            {
+                tBoxSolución.Text = mejor;
+            });
         }
     }
 }

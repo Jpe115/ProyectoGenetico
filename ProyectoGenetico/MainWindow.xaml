@@ -48,7 +48,7 @@
         <TextBlock Grid.Row="2" Grid.Column="3" Text="Distancias:" FontWeight="DemiBold" FontSize="15" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,3"/>
 
         <ScrollViewer Grid.Column="3" Grid.Row="3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-            <ListBox x:Name="listBoxDistancias"/>
+            <ListBox x:Name="listBoxDistancias" />
         </ScrollViewer>
 
         <ScrollViewer Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
