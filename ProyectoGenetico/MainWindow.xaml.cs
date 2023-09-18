@@ -125,8 +125,8 @@ namespace ProyectoGenetico
                 RedibujarPuntos();
                 DibujarRuta();
             });
-            Thread th2 = new Thread(MostrarMejor);
             th1.Start();
+            Thread th2 = new Thread(MostrarMejor);            
             th2.Start();
 
             canvas.IsEnabled = true;
