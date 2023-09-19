@@ -39,9 +39,10 @@
         <StackPanel Grid.Column="3" Grid.RowSpan="2" >
             <TextBlock Text="Cantidad de población:" FontSize="16" Margin="7,13,7,4"/>
             <TextBox x:Name="nPoblacion" BorderThickness="2" FontSize="16" Margin="7,3"/>
-            <Button x:Name="btnMostrar" Grid.Column="2" Click="Ejecutar" 
+            <Button x:Name="btnMostrar" Grid.Column="2" Click="Ejecutar" Height="35" Width="150"
                     Content="Ejecutar" FontSize="16" Margin="9" Background="Turquoise" 
-                    Padding="4" BorderThickness="2.5" BorderBrush="Black" IsEnabled="False"/>
+                    Padding="4" MouseEnter="btnMostrar_MouseEnter" MouseLeave="btnMostrar_MouseLeave"
+                    BorderThickness="2.5" BorderBrush="Black" IsEnabled="False"/>
 
         </StackPanel>
 

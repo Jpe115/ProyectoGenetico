@@ -10,6 +10,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -204,8 +205,7 @@ namespace ProyectoGenetico
                 if (Población[a, cantidadPuntos + 1] < Población[r, cantidadPuntos + 1])
                 {
                     temp = Población[a, cantidadPuntos + 1];
-                    CopiarSolucion(a, a);
-                    
+                    CopiarSolucion(a, a);                    
                 }
                 else
                 {
@@ -330,6 +330,26 @@ namespace ProyectoGenetico
             {
                 tBoxSolución.Text = mejor;
             });
+        }
+
+        private void btnMostrar_MouseEnter(object sender, MouseEventArgs e)
+        {
+            var btn = sender as Button;
+            var widthAnimation = new DoubleAnimation() { To = 155, Duration = TimeSpan.FromSeconds(0.25) };
+            var heightAnimation = new DoubleAnimation() { To = 40, Duration = TimeSpan.FromSeconds(0.25) };
+
+            btn.BeginAnimation(Button.WidthProperty, widthAnimation);
+            btn.BeginAnimation(Button.HeightProperty, heightAnimation);
+        }
+
+        private void btnMostrar_MouseLeave(object sender, MouseEventArgs e)
+        {
+            var btn = sender as Button;
+            var widthAnimation = new DoubleAnimation() { To = 150, Duration = TimeSpan.FromSeconds(0.25) };
+            var heightAnimation = new DoubleAnimation() { To = 35, Duration = TimeSpan.FromSeconds(0.25) };
+
+            btn.BeginAnimation(Button.WidthProperty, widthAnimation);
+            btn.BeginAnimation(Button.HeightProperty, heightAnimation);
         }
     }
 }
