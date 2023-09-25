@@ -6,6 +6,21 @@
         xmlns:local="clr-namespace:ProyectoGenetico"
         mc:Ignorable="d"
         Title="Proyecto genético" Height="600" Width="1100">
+
+    <Window.Resources>
+    <Style x:Key="Btn" TargetType="Button">
+        <Setter Property="Background" Value="Turquoise" />
+        <!-- Color de fondo predeterminado -->
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="White" />
+                <!-- Color de fondo al pasar el mouse sobre el botón -->
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+</Window.Resources>
+
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1.5*"/>
@@ -39,8 +54,8 @@
         <StackPanel Grid.Column="3" Grid.RowSpan="2" >
             <TextBlock Text="Cantidad de población:" FontSize="16" Margin="7,13,7,4"/>
             <TextBox x:Name="nPoblacion" BorderThickness="2" FontSize="16" Margin="7,3"/>
-            <Button x:Name="btnMostrar" Grid.Column="2" Click="Ejecutar" Height="35" Width="150"
-                    Content="Ejecutar" FontSize="16" Margin="9" Background="Turquoise" 
+            <Button x:Name="btnMostrar" Style="{StaticResource Btn}" Click="Ejecutar" Height="35" Width="150"
+                    Content="Ejecutar" FontSize="16" Margin="9" 
                     Padding="4" MouseEnter="btnMostrar_MouseEnter" MouseLeave="btnMostrar_MouseLeave"
                     BorderThickness="2.5" BorderBrush="Black" IsEnabled="False"/>
 

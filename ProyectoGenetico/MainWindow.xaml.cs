@@ -293,7 +293,6 @@ namespace ProyectoGenetico
                     canvas.Children.Add(línea);
                 }));
             }
-            
         }
 
         private void MostrarRutasPob(int[,] pob, ListBox lb, int cantX, int cantY)
@@ -335,8 +334,10 @@ namespace ProyectoGenetico
         private void btnMostrar_MouseEnter(object sender, MouseEventArgs e)
         {
             var btn = sender as Button;
+            if (btn == null) return;
+
             var widthAnimation = new DoubleAnimation() { To = 155, Duration = TimeSpan.FromSeconds(0.25) };
-            var heightAnimation = new DoubleAnimation() { To = 40, Duration = TimeSpan.FromSeconds(0.25) };
+            var heightAnimation = new DoubleAnimation() { To = 40, Duration = TimeSpan.FromSeconds(0.25) };            
 
             btn.BeginAnimation(Button.WidthProperty, widthAnimation);
             btn.BeginAnimation(Button.HeightProperty, heightAnimation);
@@ -345,6 +346,8 @@ namespace ProyectoGenetico
         private void btnMostrar_MouseLeave(object sender, MouseEventArgs e)
         {
             var btn = sender as Button;
+            if (btn == null) return;
+
             var widthAnimation = new DoubleAnimation() { To = 150, Duration = TimeSpan.FromSeconds(0.25) };
             var heightAnimation = new DoubleAnimation() { To = 35, Duration = TimeSpan.FromSeconds(0.25) };
 
