@@ -122,6 +122,7 @@ namespace ProyectoGenetico
                 ProcesoSelección();
                 ProcesoCruzamiento();
                 CalcularAptitud();
+                BuscarMejorSolución();
             });
 
             //Cambios a los listBox
@@ -261,6 +262,17 @@ namespace ProyectoGenetico
             }
         }
 
+        private void BuscarMejorSolución()
+        {
+            for (int fila = 0; fila < cantPoblación; fila++)
+            {
+                if (Población[fila, cantidadPuntos + 1] < mejorSolucionGlobal[cantidadPuntos + 1])
+                {
+                    GuardarMejorGlobal(fila);
+                }
+            }
+        }
+
         private void ProcesoCruzamiento()
         {
             if (probCruzamiento > 0 && probCruzamiento <= 100)
@@ -296,7 +308,7 @@ namespace ProyectoGenetico
             int parImpar = esPar ? 0 : 1;
             Dispatcher.Invoke(new Action(() =>
             {
-                S1yS2.Text = (valoresS1yS2[0].ToString() + ", " + valoresS1yS2[1].ToString());
+                S1yS2.Text = ("S1 y S2: " + valoresS1yS2[0].ToString() + ", " + valoresS1yS2[1].ToString());
             }));           
 
             //LLenar desde el padre 1 al hijo

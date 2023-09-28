@@ -71,7 +71,7 @@
 
         <ScrollViewer Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                <TextBlock x:Name="S1yS2" FontSize="15"/>
+                <TextBlock x:Name="S1yS2" Text="S1 y S2: " FontWeight="DemiBold" FontSize="15" Margin="5,5,15,5" VerticalAlignment="Center" />
                 <TextBlock Text="Mejor solución:" FontWeight="DemiBold" FontSize="15" Margin="5" VerticalAlignment="Center"/>
                 <TextBox x:Name="tBoxSolución" Text="Por encontrar" IsReadOnly="True" VerticalAlignment="Center" FontSize="15"/>
             </StackPanel>
