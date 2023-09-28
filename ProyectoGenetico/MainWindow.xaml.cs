@@ -82,6 +82,9 @@ namespace ProyectoGenetico
 
         private async void Ejecutar(object sender, RoutedEventArgs e)
         {
+            Cursor = Cursors.Wait;
+            //SplashScreen s = new SplashScreen("hola");
+            //s.Show(Topmost);
             canvas.IsEnabled = false;
             await Task.Run(obtenerDistancias);
 
@@ -106,6 +109,10 @@ namespace ProyectoGenetico
                 GenerarPobInicial();
                 CalcularAptitud();
                 ProcesoSelección();
+                int[] valoresS1yS2 = ObtenerS1yS2();
+                ProcesoCruzamiento(true, 1, valoresS1yS2);
+                ProcesoCruzamiento(false, -1, valoresS1yS2);
+                CalcularAptitud();
             });
 
             //Cambios a los listBox
@@ -131,6 +138,7 @@ namespace ProyectoGenetico
             th2.Start();
 
             canvas.IsEnabled = true;
+            Cursor = Cursors.Arrow;
         }
 
         private void obtenerDistancias()
@@ -244,6 +252,93 @@ namespace ProyectoGenetico
             }
         }
 
+        private int[] ObtenerS1yS2()
+        {
+            int S1 = rand.Next(1, cantidadPuntos);
+            int S2 = rand.Next(1, cantidadPuntos);
+            int temp = 0;
+            if (S1 > S2)
+            {
+                temp = S1;
+                S1 = S2; 
+                S2 = temp;
+            }
+
+            int[] valoresS1yS2 = { S1, S2 };
+            return valoresS1yS2;
+        }
+
+        private void ProcesoCruzamiento(bool esPar, int intercambio, int[] valoresS1yS2)
+        {
+            int parImpar = esPar ? 0 : 1;
+            Dispatcher.Invoke(new Action(() =>
+            {
+                S1yS2.Text = (valoresS1yS2[0].ToString() + ", " + valoresS1yS2[1].ToString());
+            }));           
+
+            //LLenar desde el padre 1 al hijo
+            for (int a = parImpar; a < cantPoblación; a += 2)
+            {
+                //LLenar desde el padre 1 al hijo
+                for (int b = 1; b < cantidadPuntos + 2; b++)
+                {
+                    Población[a, 0] = 0;
+                    if (b <= valoresS1yS2[0] || b >= valoresS1yS2[1])
+                    {
+                        //Pasar todos los elementos del padre 1 dentro de los rangos, al hijo
+                        Población[a, b] = Población2[a, b];                                             
+                    }                   
+                }
+
+                //Verificar que no sea duplicado                
+                int fila = a + intercambio;
+                int columna = 1;
+
+                for(int b = 2; b < cantidadPuntos; b++)
+                {
+                    if ( !(b <= valoresS1yS2[0] || b >= valoresS1yS2[1]) )
+                    {
+                        bool bandera = false;
+                        while (bandera == false)
+                        {
+                            int valorActual = Población2[fila, columna];
+
+                            if (!EsDuplicado(a, valorActual, valoresS1yS2))
+                            {
+                                Población[a, b] = valorActual;
+                                bandera = true;
+                            }
+                            else
+                            {
+                                columna++;
+                            }
+                        }
+                        columna++;
+                    }
+                }                
+            }           
+        }
+
+        private bool EsDuplicado(int a, int valor, int[] valoresS1yS2)
+        {
+            for (int col = 1; col < cantidadPuntos; col++)
+            {
+                if (Población2[a, col] != 0)
+                {
+                    if (col <= valoresS1yS2[0] || col >= valoresS1yS2[1])
+                    {
+                        if (Población2[a, col] == valor)
+                        {
+                            return true;
+                        }
+                    }                        
+                }
+            }
+            return false;
+        }
+
+        #region Interfaz
+
         private void RedibujarPuntos()
         {
             for (int i = 0; i < coordenadas.Count; i++)
@@ -354,5 +449,6 @@ namespace ProyectoGenetico
             btn.BeginAnimation(Button.WidthProperty, widthAnimation);
             btn.BeginAnimation(Button.HeightProperty, heightAnimation);
         }
+        #endregion
     }
 }
