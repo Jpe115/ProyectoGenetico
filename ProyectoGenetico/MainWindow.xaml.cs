@@ -33,6 +33,7 @@ namespace ProyectoGenetico
         private int[] mejorSolucionGlobal = new int[1];
         private int[,] Población2 = new int[1, 1];
         private string mejor = "";
+        private int probCruzamiento;
 
         private Dictionary<int, int> poblacionesChicas = new Dictionary<int, int> {
             { 1, 1 },
@@ -104,14 +105,22 @@ namespace ProyectoGenetico
             }
             Población = new int[cantPoblación, cantidadPuntos + 2];
 
+            try
+            {
+                probCruzamiento = Convert.ToInt32(ProbCruzamiento.Text);
+            }
+            catch (Exception)
+            {
+                probCruzamiento = 90;
+            }
+
+
             await Task.Run(() => {
                 InicializarPoblación();
                 GenerarPobInicial();
                 CalcularAptitud();
                 ProcesoSelección();
-                int[] valoresS1yS2 = ObtenerS1yS2();
-                ProcesoCruzamiento(true, 1, valoresS1yS2);
-                ProcesoCruzamiento(false, -1, valoresS1yS2);
+                ProcesoCruzamiento();
                 CalcularAptitud();
             });
 
@@ -252,6 +261,20 @@ namespace ProyectoGenetico
             }
         }
 
+        private void ProcesoCruzamiento()
+        {
+            if (probCruzamiento > 0 && probCruzamiento <= 100)
+            {
+                int prob = rand.Next(1, 100);
+                if (prob <= probCruzamiento)
+                {
+                    int[] valoresS1yS2 = ObtenerS1yS2();
+                    TwoPointCrossover(true, 1, valoresS1yS2);
+                    TwoPointCrossover(false, -1, valoresS1yS2);
+                }
+            }
+        }
+
         private int[] ObtenerS1yS2()
         {
             int S1 = rand.Next(1, cantidadPuntos);
@@ -268,7 +291,7 @@ namespace ProyectoGenetico
             return valoresS1yS2;
         }
 
-        private void ProcesoCruzamiento(bool esPar, int intercambio, int[] valoresS1yS2)
+        private void TwoPointCrossover(bool esPar, int intercambio, int[] valoresS1yS2)
         {
             int parImpar = esPar ? 0 : 1;
             Dispatcher.Invoke(new Action(() =>
