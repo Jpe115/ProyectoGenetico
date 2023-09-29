@@ -34,13 +34,14 @@ namespace ProyectoGenetico
         private int[,] Población2 = new int[1, 1];
         private string mejor = "";
         private int probCruzamiento;
+        private int probMutación;
 
         private Dictionary<int, int> poblacionesChicas = new Dictionary<int, int> {
             { 1, 1 },
             { 2, 1 },
             { 3, 1 },
-            { 4, 4 },
-            { 5, 12 },
+            { 4, 6 },
+            { 5, 24 },
             { 6, 60 },
         };
 
@@ -114,6 +115,14 @@ namespace ProyectoGenetico
                 probCruzamiento = 90;
             }
 
+            try
+            {
+                probMutación = Convert.ToInt32(ProbMutación.Text);
+            }
+            catch (Exception)
+            {
+                probMutación = 10;
+            }
 
             await Task.Run(() => {
                 InicializarPoblación();
@@ -135,6 +144,18 @@ namespace ProyectoGenetico
                 MostrarRutasPob(Población2, listBox2, cantPoblación, cantidadPuntos);
                 MostrarRutasPob(distancias, listBoxDistancias, cantidadPuntos, cantidadPuntos - 2);
             });
+            if (ProcesoMutación())
+            {
+                await Task.Run(() =>
+                {
+                    MutaciónInsert();
+                    CalcularAptitud();
+                    BuscarMejorSolución();
+                    MostrarRutasPob(Población, listBox2, cantPoblación, cantidadPuntos);
+                });
+                TituloPob1.Text = "Población 1: (antes de mutación)";
+                TituloPob2.Text = "Población 1: (después de mutación)";
+            }            
 
             //Cambios al canvas
             canvas.Children.Clear();
@@ -273,9 +294,10 @@ namespace ProyectoGenetico
             }
         }
 
+        #region Cruzamiento
         private void ProcesoCruzamiento()
         {
-            if (probCruzamiento > 0 && probCruzamiento <= 100)
+            if (probCruzamiento >= 0 && probCruzamiento <= 100)
             {
                 int prob = rand.Next(1, 100);
                 if (prob <= probCruzamiento)
@@ -308,7 +330,7 @@ namespace ProyectoGenetico
             int parImpar = esPar ? 0 : 1;
             Dispatcher.Invoke(new Action(() =>
             {
-                S1yS2.Text = ("S1 y S2: " + valoresS1yS2[0].ToString() + ", " + valoresS1yS2[1].ToString());
+                S1yS2Cruzamiento.Text = ("S1 y S2: " + valoresS1yS2[0].ToString() + ", " + valoresS1yS2[1].ToString());
             }));           
 
             //LLenar desde el padre 1 al hijo
@@ -371,6 +393,44 @@ namespace ProyectoGenetico
             }
             return false;
         }
+        #endregion
+
+        #region Mutación
+        private bool ProcesoMutación()
+        {
+            if (probMutación >= 0 && probMutación <= 100)
+            {
+                int probabilidad = rand.Next(1, 100);
+                if (probabilidad >= probMutación)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private void MutaciónInsert()
+        {
+            for (int fila = 0; fila < cantPoblación; fila++)
+            {
+                int[] N1yN2 = ObtenerS1yS2();
+                int aux = Población[fila, N1yN2[0]];
+
+                for (int columna = N1yN2[0] + 1; columna <= N1yN2[1]; columna++)
+                {
+                    Población[fila, columna - 1] = Población[fila, columna];
+                }
+
+                Población[fila, N1yN2[1]] = aux;
+                
+                if (fila == 0)
+                {
+                    MessageBox.Show(N1yN2[0] + ", " + N1yN2[1]);
+                }
+                
+            }           
+        }
+        #endregion
 
         #region Interfaz
 
