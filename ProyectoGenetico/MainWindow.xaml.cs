@@ -35,6 +35,7 @@ namespace ProyectoGenetico
         private string mejor = "";
         private int probCruzamiento;
         private int probMutación;
+        private bool seHizoCruzamiento = false;
 
         private Dictionary<int, int> poblacionesChicas = new Dictionary<int, int> {
             { 1, 1 },
@@ -88,6 +89,7 @@ namespace ProyectoGenetico
             //SplashScreen s = new SplashScreen("hola");
             //s.Show(Topmost);
             canvas.IsEnabled = false;
+            seHizoCruzamiento = false;
             await Task.Run(ObtenerDistancias);
 
             //elegir cantidad de población para cuando son menos de 7 ciudades
@@ -143,23 +145,40 @@ namespace ProyectoGenetico
 
             if (ProcesoMutación())
             {
-                await Task.Run(() =>
+                if (seHizoCruzamiento)
                 {
-                    MostrarRutasPob(Población, listBox, cantPoblación, cantidadPuntos);
-                    MostrarRutasPob(distancias, listBoxDistancias, cantidadPuntos, cantidadPuntos - 2);
+                    await Task.Run(() =>
+                    {
+                        MostrarRutasPob(Población, listBox, cantPoblación, cantidadPuntos);
+                        MostrarRutasPob(distancias, listBoxDistancias, cantidadPuntos, cantidadPuntos - 2);
 
-                    MutaciónSwap();
-                    CalcularAptitud();
-                    BuscarMejorSolución();
-                    MostrarRutasPob(Población, listBox2, cantPoblación, cantidadPuntos);
-                });
-                TituloPob1.Text = "Población 1: (antes de mutación)";
-                TituloPob2.Text = "Población 1: (después de mutación)";
+                        MutaciónSwap();
+                        CalcularAptitud();
+                        BuscarMejorSolución();
+                        MostrarRutasPob(Población, listBox2, cantPoblación, cantidadPuntos);
+                    });
+                    TituloPob1.Text = "Población 1: (antes de mutación)";
+                    TituloPob2.Text = "Población 1: (después de mutación)";
+                }
+                else
+                {
+                    //Mutacion al pob2 en vez de pob1
+                }
             }
             else {
-                TituloPob1.Text = "Población 1: (después del cruzamiento)";
-                TituloPob2.Text = "Población 2:";
-                
+                if (seHizoCruzamiento)
+                {
+                    //Mostrar el resultado del cruzamiento
+                    TituloPob1.Text = "Población 1: (después del cruzamiento)";
+                    TituloPob2.Text = "Población 2:";
+                }
+                else
+                {
+                    //Mostrar el resultado de la selección solamente
+                    TituloPob1.Text = "Población 1:";
+                    TituloPob2.Text = "Población 2: (Después de la selección)";
+
+                }
                 await Task.Run(() =>
                 {
                     MostrarRutasPob(Población, listBox, cantPoblación, cantidadPuntos);
@@ -316,7 +335,8 @@ namespace ProyectoGenetico
                     int[] valoresS1yS2 = ObtenerS1yS2();
                     TwoPointCrossover(true, 1, valoresS1yS2);
                     TwoPointCrossover(false, -1, valoresS1yS2);
-                }
+                    seHizoCruzamiento = true;
+                }               
             }
         }
 
