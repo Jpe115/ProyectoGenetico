@@ -129,11 +129,11 @@ namespace ProyectoGenetico
             await Task.Run(() => {
                 InicializarPoblación();
                 GenerarPobInicial();
-                CalcularAptitud();
+                CalcularAptitud(Población);
                 ProcesoSelección();
                 ProcesoCruzamiento();
-                CalcularAptitud();
-                BuscarMejorSolución();
+                CalcularAptitud(Población);
+                BuscarMejorSolución(Población);
             });
 
             //Cambios a los listBox
@@ -145,16 +145,20 @@ namespace ProyectoGenetico
 
             if (ProcesoMutación())
             {
+                await Task.Run(() =>
+                {
+                    MostrarRutasPob(distancias, listBoxDistancias, cantidadPuntos, cantidadPuntos - 2);
+                });
+
                 if (seHizoCruzamiento)
                 {
                     await Task.Run(() =>
                     {
+                        //Mostrar antes de que se hagan los cambios y después
                         MostrarRutasPob(Población, listBox, cantPoblación, cantidadPuntos);
-                        MostrarRutasPob(distancias, listBoxDistancias, cantidadPuntos, cantidadPuntos - 2);
-
-                        MutaciónSwap();
-                        CalcularAptitud();
-                        BuscarMejorSolución();
+                        MutaciónSwap(Población);
+                        CalcularAptitud(Población);
+                        BuscarMejorSolución(Población);
                         MostrarRutasPob(Población, listBox2, cantPoblación, cantidadPuntos);
                     });
                     TituloPob1.Text = "Población 1: (antes de mutación)";
@@ -162,7 +166,18 @@ namespace ProyectoGenetico
                 }
                 else
                 {
-                    //Mutacion al pob2 en vez de pob1
+                    //Mutación al pob2 en vez de pob1
+                    await Task.Run(() =>
+                    {
+                        //Mostrar antes de que se hagan los cambios y después
+                        MostrarRutasPob(Población2, listBox, cantPoblación, cantidadPuntos);
+                        MutaciónSwap(Población2);
+                        CalcularAptitud(Población2);
+                        BuscarMejorSolución(Población2);
+                        MostrarRutasPob(Población2, listBox2, cantPoblación, cantidadPuntos);
+                    });
+                    TituloPob1.Text = "Población 2: (antes de mutación)";
+                    TituloPob2.Text = "Población 2: (después de mutación)";
                 }
             }
             else {
@@ -247,16 +262,16 @@ namespace ProyectoGenetico
             }
         }
 
-        private void CalcularAptitud()
+        private void CalcularAptitud(int[,] pob)
         {            
             for (int a = 0; a < cantPoblación; a++)
             {
                 int aptitud = 0;
                 for (int b = 1; b < cantidadPuntos; b++)
                 {
-                    aptitud += distancias[Población[a, b], Población[a, b +1]];
+                    aptitud += distancias[pob[a, b], pob[a, b +1]];
                 }
-                Población[a, cantidadPuntos +1] = aptitud;
+                pob[a, cantidadPuntos +1] = aptitud;
             }
         }
 
@@ -286,11 +301,11 @@ namespace ProyectoGenetico
                 if(a == 0)
                 {
                     mejorSolucionBinaria = temp;
-                    GuardarMejorGlobal(a);
+                    GuardarMejorGlobal(a, Población);
                 }
                 if (temp < mejorSolucionBinaria)
                 {
-                    GuardarMejorGlobal(a);
+                    GuardarMejorGlobal(a, Población);
                 }
 
                 mejorSolucionBinaria = temp;
@@ -305,21 +320,21 @@ namespace ProyectoGenetico
             }
         }
 
-        private void GuardarMejorGlobal(int filaActual)
+        private void GuardarMejorGlobal(int filaActual, int[,] pob)
         {
             for (int a = 0; a < cantidadPuntos + 2; a++)
             {
-                mejorSolucionGlobal[a] = Población[filaActual, a];
+                mejorSolucionGlobal[a] = pob[filaActual, a];
             }
         }
 
-        private void BuscarMejorSolución()
+        private void BuscarMejorSolución(int[,] pob)
         {
             for (int fila = 0; fila < cantPoblación; fila++)
             {
-                if (Población[fila, cantidadPuntos + 1] < mejorSolucionGlobal[cantidadPuntos + 1])
+                if (pob[fila, cantidadPuntos + 1] < mejorSolucionGlobal[cantidadPuntos + 1])
                 {
-                    GuardarMejorGlobal(fila);
+                    GuardarMejorGlobal(fila, pob);
                 }
             }
         }
@@ -440,21 +455,20 @@ namespace ProyectoGenetico
             return false;
         }
 
-        private void MutaciónSwap()
+        private void MutaciónSwap(int[,] pob)
         {
             for (int fila = 0; fila < cantPoblación; fila++)
             {
                 int[] N1yN2 = ObtenerS1yS2();
                 
                 int aux = Población[fila, N1yN2[0]];
-                Población[fila, N1yN2[0]] = Población[fila, N1yN2[1]];
-                Población[fila, N1yN2[1]] = aux;
+                pob[fila, N1yN2[0]] = pob[fila, N1yN2[1]];
+                pob[fila, N1yN2[1]] = aux;
                 
-                if (fila == 0 || fila == 1)
-                {
-                    MessageBox.Show(N1yN2[0] + ", " + N1yN2[1]);
-                }
-                
+                //if (fila == 0 || fila == 1)
+                //{
+                //    MessageBox.Show(N1yN2[0] + ", " + N1yN2[1]);
+                //}               
             }           
         }
         #endregion
