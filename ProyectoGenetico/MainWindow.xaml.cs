@@ -88,7 +88,7 @@ namespace ProyectoGenetico
             //SplashScreen s = new SplashScreen("hola");
             //s.Show(Topmost);
             canvas.IsEnabled = false;
-            await Task.Run(obtenerDistancias);
+            await Task.Run(ObtenerDistancias);
 
             //elegir cantidad de población para cuando son menos de 7 ciudades
             // y establecer 100 de población por default
@@ -138,23 +138,34 @@ namespace ProyectoGenetico
             listBox.Items.Clear();
             listBox2.Items.Clear();
             listBoxDistancias.Items.Clear();
-            await Task.Run(() =>
-            {
-                MostrarRutasPob(Población, listBox, cantPoblación, cantidadPuntos);
-                MostrarRutasPob(Población2, listBox2, cantPoblación, cantidadPuntos);
-                MostrarRutasPob(distancias, listBoxDistancias, cantidadPuntos, cantidadPuntos - 2);
-            });
+            
+            
+
             if (ProcesoMutación())
             {
                 await Task.Run(() =>
                 {
-                    MutaciónInsert();
+                    MostrarRutasPob(Población, listBox, cantPoblación, cantidadPuntos);
+                    MostrarRutasPob(distancias, listBoxDistancias, cantidadPuntos, cantidadPuntos - 2);
+
+                    MutaciónSwap();
                     CalcularAptitud();
                     BuscarMejorSolución();
                     MostrarRutasPob(Población, listBox2, cantPoblación, cantidadPuntos);
                 });
                 TituloPob1.Text = "Población 1: (antes de mutación)";
                 TituloPob2.Text = "Población 1: (después de mutación)";
+            }
+            else {
+                TituloPob1.Text = "Población 1: (después del cruzamiento)";
+                TituloPob2.Text = "Población 2:";
+                
+                await Task.Run(() =>
+                {
+                    MostrarRutasPob(Población, listBox, cantPoblación, cantidadPuntos);
+                    MostrarRutasPob(Población2, listBox2, cantPoblación, cantidadPuntos);
+                    MostrarRutasPob(distancias, listBoxDistancias, cantidadPuntos, cantidadPuntos - 2);
+                });
             }            
 
             //Cambios al canvas
@@ -172,7 +183,7 @@ namespace ProyectoGenetico
             Cursor = Cursors.Arrow;
         }
 
-        private void obtenerDistancias()
+        private void ObtenerDistancias()
         {
             cantidadPuntos = coordenadas.Count;
             distancias = new int[cantidadPuntos, cantidadPuntos];
@@ -311,8 +322,8 @@ namespace ProyectoGenetico
 
         private int[] ObtenerS1yS2()
         {
-            int S1 = rand.Next(1, cantidadPuntos);
-            int S2 = rand.Next(1, cantidadPuntos);
+            int S1 = rand.Next(1, cantidadPuntos - 3);
+            int S2 = rand.Next(S1 + 1, cantidadPuntos);
             int temp = 0;
             if (S1 > S2)
             {
@@ -398,10 +409,10 @@ namespace ProyectoGenetico
         #region Mutación
         private bool ProcesoMutación()
         {
-            if (probMutación >= 0 && probMutación <= 100)
+            if (probMutación >= 1 && probMutación <= 100)
             {
                 int probabilidad = rand.Next(1, 100);
-                if (probabilidad >= probMutación)
+                if (probabilidad <= probMutación)
                 {
                     return true;
                 }
@@ -409,21 +420,17 @@ namespace ProyectoGenetico
             return false;
         }
 
-        private void MutaciónInsert()
+        private void MutaciónSwap()
         {
             for (int fila = 0; fila < cantPoblación; fila++)
             {
                 int[] N1yN2 = ObtenerS1yS2();
+                
                 int aux = Población[fila, N1yN2[0]];
-
-                for (int columna = N1yN2[0] + 1; columna <= N1yN2[1]; columna++)
-                {
-                    Población[fila, columna - 1] = Población[fila, columna];
-                }
-
+                Población[fila, N1yN2[0]] = Población[fila, N1yN2[1]];
                 Población[fila, N1yN2[1]] = aux;
                 
-                if (fila == 0)
+                if (fila == 0 || fila == 1)
                 {
                     MessageBox.Show(N1yN2[0] + ", " + N1yN2[1]);
                 }
