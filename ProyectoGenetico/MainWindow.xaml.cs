@@ -100,7 +100,7 @@ namespace ProyectoGenetico
             }
             catch (Exception)
             {
-                cantPoblación = 100;
+                cantPoblación = 500;
             }
             if(cantidadPuntos < 7)
             {
