@@ -36,6 +36,7 @@ namespace ProyectoGenetico
         private int probCruzamiento;
         private int probMutación;
         private bool seHizoCruzamiento = false;
+        private int nCiclos;
 
         private Dictionary<int, int> poblacionesChicas = new Dictionary<int, int> {
             { 1, 1 },
@@ -124,6 +125,15 @@ namespace ProyectoGenetico
             catch (Exception)
             {
                 probMutación = 20;
+            }
+
+            try
+            {
+                nCiclos = Convert.ToInt32(Ciclos.Text);
+            }
+            catch (Exception)
+            {
+                nCiclos = 100;
             }
 
             await Task.Run(() => {
