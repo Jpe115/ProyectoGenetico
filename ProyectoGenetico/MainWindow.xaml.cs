@@ -123,7 +123,7 @@ namespace ProyectoGenetico
             }
             catch (Exception)
             {
-                probMutación = 10;
+                probMutación = 20;
             }
 
             await Task.Run(() => {
