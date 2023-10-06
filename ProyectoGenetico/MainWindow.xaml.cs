@@ -38,6 +38,7 @@ namespace ProyectoGenetico
         private bool seHizoCruzamiento = false;
         private int nCiclos;
         private int ciclo;
+        private int pobActual;
 
         private Dictionary<int, int> poblacionesChicas = new Dictionary<int, int> {
             { 1, 1 },
@@ -140,13 +141,16 @@ namespace ProyectoGenetico
             await Task.Run(() => {
                 InicializarPoblación();
                 GenerarPobInicial();
-                CalcularAptitud(Población);                
+                CalcularAptitud(Población);
+                Población2 = new int[cantPoblación, cantidadPuntos + 2];
+                mejorSolucionGlobal = new int[cantidadPuntos + 2];
             });
 
             do
             {
                 await Task.Run(() => {
                     ProcesoSelección();
+                    BuscarMejorSolución(Población);
                     ProcesoCruzamiento();
                     if (seHizoCruzamiento)
                     {
@@ -298,39 +302,18 @@ namespace ProyectoGenetico
         }
 
         private void ProcesoSelección()
-        {
-            Población2 = new int[cantPoblación, cantidadPuntos + 2];
-            mejorSolucionGlobal = new int[cantidadPuntos + 2];
-
-            int mejorSolucionBinaria = 0;
-            int temp;
-
+        {                      
             for(int a = 0;a < cantPoblación; a++)
             {
-                int r = rand.Next(0,cantPoblación-1);
+                int r = rand.Next(0,cantPoblación - 1);
                 if (Población[a, cantidadPuntos + 1] < Población[r, cantidadPuntos + 1])
                 {
-                    temp = Población[a, cantidadPuntos + 1];
                     CopiarSolucion(a, a);                    
                 }
                 else
                 {
-                    temp = Población[r, cantidadPuntos + 1];
                     CopiarSolucion(r, a);
                 }
-
-                //guardar mejor solución global
-                if(a == 0)
-                {
-                    mejorSolucionBinaria = temp;
-                    GuardarMejorGlobal(a, Población);
-                }
-                if (temp < mejorSolucionBinaria)
-                {
-                    GuardarMejorGlobal(a, Población);
-                }
-
-                mejorSolucionBinaria = temp;
             }
         }
 
@@ -373,7 +356,15 @@ namespace ProyectoGenetico
                     TwoPointCrossover(true, 1, valoresS1yS2);
                     TwoPointCrossover(false, -1, valoresS1yS2);
                     seHizoCruzamiento = true;
-                }               
+                }
+                else
+                {
+                    seHizoCruzamiento = false;
+                }
+            }
+            else
+            {
+                seHizoCruzamiento = false;
             }
         }
 
