@@ -39,7 +39,7 @@ namespace ProyectoGenetico
         private int nCiclos;
         private int ciclo;
         private bool esPob1Actual = true;
-        private int ciclosSinMejora;
+        private int búsquedasSinMejora;
 
         private Dictionary<int, int> poblacionesChicas = new Dictionary<int, int> {
             { 1, 1 },
@@ -265,7 +265,7 @@ namespace ProyectoGenetico
 
                 ciclo++;
                 tBoxGen.Text = ciclo.ToString();
-            } while (ciclo < nCiclos);            
+            } while (ciclo < nCiclos && búsquedasSinMejora < 28);            
 
             canvas.IsEnabled = true;
             Cursor = Cursors.Arrow;
@@ -366,12 +366,19 @@ namespace ProyectoGenetico
 
         private void BuscarMejorSolución(int[,] pob)
         {
+            bool mejoró = false;
             for (int fila = 0; fila < cantPoblación; fila++)
             {
                 if (pob[fila, cantidadPuntos + 1] < mejorSolucionGlobal[cantidadPuntos + 1])
                 {
                     GuardarMejorGlobal(fila, pob);
+                    mejoró = true;
+                    búsquedasSinMejora = 0;
                 }
+            }
+            if (mejoró == false)
+            {
+                búsquedasSinMejora++;
             }
         }
 #endregion
