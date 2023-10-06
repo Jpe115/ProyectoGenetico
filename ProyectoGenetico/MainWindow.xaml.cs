@@ -88,10 +88,10 @@ namespace ProyectoGenetico
         private async void Ejecutar(object sender, RoutedEventArgs e)
         {
             Cursor = Cursors.Wait;
-            //SplashScreen s = new SplashScreen("hola");
-            //s.Show(Topmost);
             canvas.IsEnabled = false;
             seHizoCruzamiento = false;
+            ciclo = 0; 
+
             await Task.Run(ObtenerDistancias);
 
             //elegir cantidad de población para cuando son menos de 7 ciudades
@@ -140,89 +140,100 @@ namespace ProyectoGenetico
             await Task.Run(() => {
                 InicializarPoblación();
                 GenerarPobInicial();
-                CalcularAptitud(Población);
-                ProcesoSelección();
-                ProcesoCruzamiento();
-                CalcularAptitud(Población);
-                BuscarMejorSolución(Población);
+                CalcularAptitud(Población);                
             });
 
-            //Cambios a los listBox
-            listBox.Items.Clear();
-            listBox2.Items.Clear();
-            listBoxDistancias.Items.Clear();
-            
-            
-
-            if (ProcesoMutación())
+            do
             {
-                await Task.Run(() =>
-                {
-                    MostrarRutasPob(distancias, listBoxDistancias, cantidadPuntos, cantidadPuntos - 2);
-                });
-
-                if (seHizoCruzamiento)
-                {
-                    await Task.Run(() =>
+                await Task.Run(() => {
+                    ProcesoSelección();
+                    ProcesoCruzamiento();
+                    if (seHizoCruzamiento)
                     {
-                        //Mostrar antes de que se hagan los cambios y después
-                        MostrarRutasPob(Población, listBox, cantPoblación, cantidadPuntos);
-                        MutaciónSwap(Población);
                         CalcularAptitud(Población);
                         BuscarMejorSolución(Población);
-                        MostrarRutasPob(Población, listBox2, cantPoblación, cantidadPuntos);
-                    });
-                    TituloPob1.Text = "Población 1: (antes de mutación)";
-                    TituloPob2.Text = "Población 1: (después de mutación)";
-                }
-                else
+                    }
+                });
+
+                //Cambios a los listBox
+                listBox.Items.Clear();
+                listBox2.Items.Clear();
+                listBoxDistancias.Items.Clear();
+
+                if (ProcesoMutación())
                 {
-                    //Mutación al pob2 en vez de pob1
                     await Task.Run(() =>
                     {
-                        //Mostrar antes de que se hagan los cambios y después
-                        MostrarRutasPob(Población2, listBox, cantPoblación, cantidadPuntos);
-                        MutaciónSwap(Población2);
-                        CalcularAptitud(Población2);
-                        BuscarMejorSolución(Población2);
-                        MostrarRutasPob(Población2, listBox2, cantPoblación, cantidadPuntos);
+                        MostrarRutasPob(distancias, listBoxDistancias, cantidadPuntos, cantidadPuntos - 2);
                     });
-                    TituloPob1.Text = "Población 2: (antes de mutación)";
-                    TituloPob2.Text = "Población 2: (después de mutación)";
-                }
-            }
-            else {
-                if (seHizoCruzamiento)
-                {
-                    //Mostrar el resultado del cruzamiento
-                    TituloPob1.Text = "Población 1: (después del cruzamiento)";
-                    TituloPob2.Text = "Población 2:";
+
+                    if (seHizoCruzamiento)
+                    {
+                        await Task.Run(() =>
+                        {
+                            //Mostrar antes de que se hagan los cambios y después
+                            MostrarRutasPob(Población, listBox, cantPoblación, cantidadPuntos);
+                            MutaciónSwap(Población);
+                            CalcularAptitud(Población);
+                            BuscarMejorSolución(Población);
+                            MostrarRutasPob(Población, listBox2, cantPoblación, cantidadPuntos);
+                        });
+                        TituloPob1.Text = "Población 1: (antes de mutación)";
+                        TituloPob2.Text = "Población 1: (después de mutación)";
+                    }
+                    else
+                    {
+                        //Mutación al pob2 en vez de pob1
+                        await Task.Run(() =>
+                        {
+                            //Mostrar antes de que se hagan los cambios y después
+                            MostrarRutasPob(Población2, listBox, cantPoblación, cantidadPuntos);
+                            MutaciónSwap(Población2);
+                            CalcularAptitud(Población2);
+                            BuscarMejorSolución(Población2);
+                            MostrarRutasPob(Población2, listBox2, cantPoblación, cantidadPuntos);
+                        });
+                        TituloPob1.Text = "Población 2: (antes de mutación)";
+                        TituloPob2.Text = "Población 2: (después de mutación)";
+                    }
                 }
                 else
                 {
-                    //Mostrar el resultado de la selección solamente
-                    TituloPob1.Text = "Población 1:";
-                    TituloPob2.Text = "Población 2: (Después de la selección)";
+                    if (seHizoCruzamiento)
+                    {
+                        //Mostrar el resultado del cruzamiento
+                        TituloPob1.Text = "Población 1: (después del cruzamiento)";
+                        TituloPob2.Text = "Población 2:";
+                    }
+                    else
+                    {
+                        //Mostrar el resultado de la selección solamente
+                        TituloPob1.Text = "Población 1:";
+                        TituloPob2.Text = "Población 2: (Después de la selección)";
 
+                    }
+                    await Task.Run(() =>
+                    {
+                        MostrarRutasPob(Población, listBox, cantPoblación, cantidadPuntos);
+                        MostrarRutasPob(Población2, listBox2, cantPoblación, cantidadPuntos);
+                        MostrarRutasPob(distancias, listBoxDistancias, cantidadPuntos, cantidadPuntos - 2);
+                    });
                 }
-                await Task.Run(() =>
-                {
-                    MostrarRutasPob(Población, listBox, cantPoblación, cantidadPuntos);
-                    MostrarRutasPob(Población2, listBox2, cantPoblación, cantidadPuntos);
-                    MostrarRutasPob(distancias, listBoxDistancias, cantidadPuntos, cantidadPuntos - 2);
-                });
-            }            
 
-            //Cambios al canvas
-            canvas.Children.Clear();
-            Thread th1 = new Thread(() =>
-            {
-                RedibujarPuntos();
-                DibujarRuta();
-            });
-            th1.Start();
-            Thread th2 = new Thread(MostrarMejor);            
-            th2.Start();
+                //Cambios al canvas
+                canvas.Children.Clear();
+                Thread th1 = new Thread(() =>
+                {
+                    RedibujarPuntos();
+                    DibujarRuta();
+                });
+                th1.Start();
+                Thread th2 = new Thread(MostrarMejor);
+                th2.Start();
+
+                ciclo++;
+                tBoxGen.Text = ciclo.ToString();
+            } while (ciclo < nCiclos);            
 
             canvas.IsEnabled = true;
             Cursor = Cursors.Arrow;
