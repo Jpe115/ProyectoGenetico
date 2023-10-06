@@ -110,6 +110,9 @@ namespace ProyectoGenetico
                 cantPoblación = poblacionesChicas[cantidadPuntos];
             }
             Población = new int[cantPoblación, cantidadPuntos + 2];
+            Población2 = new int[cantPoblación, cantidadPuntos + 2];
+            mejorSolucionGlobal = new int[cantidadPuntos + 2];
+            mejorSolucionGlobal[cantidadPuntos + 1] = 99999999;
 
             try
             {
@@ -137,13 +140,11 @@ namespace ProyectoGenetico
             {
                 nCiclos = 100;
             }
-
+            
             await Task.Run(() => {
                 InicializarPoblación();
                 GenerarPobInicial();
-                CalcularAptitud(Población);
-                Población2 = new int[cantPoblación, cantidadPuntos + 2];
-                mejorSolucionGlobal = new int[cantidadPuntos + 2];
+                CalcularAptitud(Población);                
             });
 
             do
@@ -198,7 +199,7 @@ namespace ProyectoGenetico
                         MostrarRutasPob(distancias, listBoxDistancias, cantidadPuntos, cantidadPuntos - 2);
                     });
 
-                    if (seHizoCruzamiento)
+                    if (esPob1Actual)
                     {
                         await Task.Run(() =>
                         {
@@ -214,7 +215,6 @@ namespace ProyectoGenetico
                     }
                     else
                     {
-                        //Mutación al pob2 en vez de pob1
                         await Task.Run(() =>
                         {
                             //Mostrar antes de que se hagan los cambios y después
