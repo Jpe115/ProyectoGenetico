@@ -38,7 +38,7 @@ namespace ProyectoGenetico
         private bool seHizoCruzamiento = false;
         private int nCiclos;
         private int ciclo;
-        private int pobActual;
+        private bool esPob1Actual = true;
 
         private Dictionary<int, int> poblacionesChicas = new Dictionary<int, int> {
             { 1, 1 },
@@ -149,13 +149,25 @@ namespace ProyectoGenetico
             do
             {
                 await Task.Run(() => {
-                    ProcesoSelección();
-                    BuscarMejorSolución(Población);
+                    if (esPob1Actual)
+                    {
+                        ProcesoSelección(Población, Población2);
+                        BuscarMejorSolución(Población2);
+                        esPob1Actual = !esPob1Actual;
+                    }
+                    else
+                    {
+                        ProcesoSelección(Población2, Población);
+                        BuscarMejorSolución(Población);
+                        esPob1Actual = !esPob1Actual;
+                    }
+                    
                     ProcesoCruzamiento();
                     if (seHizoCruzamiento)
                     {
                         CalcularAptitud(Población);
                         BuscarMejorSolución(Población);
+                        esPob1Actual = !esPob1Actual;
                     }
                 });
 
@@ -301,27 +313,27 @@ namespace ProyectoGenetico
             }
         }
 
-        private void ProcesoSelección()
+        private void ProcesoSelección(int[,] pob, int[,] pobContraria)
         {                      
             for(int a = 0;a < cantPoblación; a++)
             {
                 int r = rand.Next(0,cantPoblación - 1);
-                if (Población[a, cantidadPuntos + 1] < Población[r, cantidadPuntos + 1])
+                if (pob[a, cantidadPuntos + 1] < pob[r, cantidadPuntos + 1])
                 {
-                    CopiarSolucion(a, a);                    
+                    CopiarSolucion(a, a, pob, pobContraria);                    
                 }
                 else
                 {
-                    CopiarSolucion(r, a);
+                    CopiarSolucion(r, a, pob, pobContraria);
                 }
             }
         }
 
-        private void CopiarSolucion(int filaGanadora, int filaActual)
+        private void CopiarSolucion(int filaGanadora, int filaActual, int[,] pob, int[,] pobContraria)
         {
             for(int a = 0; a < cantidadPuntos+2; a++)
             {
-                Población2[filaActual, a] = Población[filaGanadora, a];
+                pobContraria[filaActual, a] = pob[filaGanadora, a];
             }
         }
 
