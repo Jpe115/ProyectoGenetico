@@ -39,6 +39,7 @@ namespace ProyectoGenetico
         private int nCiclos;
         private int ciclo;
         private bool esPob1Actual = true;
+        private int ciclosSinMejora;
 
         private Dictionary<int, int> poblacionesChicas = new Dictionary<int, int> {
             { 1, 1 },
@@ -112,7 +113,7 @@ namespace ProyectoGenetico
             Población = new int[cantPoblación, cantidadPuntos + 2];
             Población2 = new int[cantPoblación, cantidadPuntos + 2];
             mejorSolucionGlobal = new int[cantidadPuntos + 2];
-            mejorSolucionGlobal[cantidadPuntos + 1] = 99999999;
+            mejorSolucionGlobal[cantidadPuntos + 1] = 999999999;
 
             try
             {
@@ -286,6 +287,7 @@ namespace ProyectoGenetico
                 }
         }
 
+        #region Población
         private void InicializarPoblación()
         {
             for(int a = 0; a < cantPoblación; a++)
@@ -327,6 +329,7 @@ namespace ProyectoGenetico
                 pob[a, cantidadPuntos +1] = aptitud;
             }
         }
+        #endregion
 
         private void ProcesoSelección(int[,] pob, int[,] pobContraria)
         {                      
@@ -344,6 +347,7 @@ namespace ProyectoGenetico
             }
         }
 
+        #region Búsqueda de soluciones
         private void CopiarSolucion(int filaGanadora, int filaActual, int[,] pob, int[,] pobContraria)
         {
             for(int a = 0; a < cantidadPuntos+2; a++)
@@ -370,6 +374,7 @@ namespace ProyectoGenetico
                 }
             }
         }
+#endregion
 
         #region Cruzamiento
         private void ProcesoCruzamiento(int[,] pobContraria, int[,] pob)
