@@ -40,6 +40,7 @@ namespace ProyectoGenetico
         private int ciclo;
         private bool esPob1Actual = true;
         private int búsquedasSinMejora;
+        private double intentosSinMejora;
 
         private Dictionary<int, int> poblacionesChicas = new Dictionary<int, int> {
             { 1, 1 },
@@ -109,11 +110,7 @@ namespace ProyectoGenetico
             if(cantidadPuntos < 7)
             {
                 cantPoblación = poblacionesChicas[cantidadPuntos];
-            }
-            Población = new int[cantPoblación, cantidadPuntos + 2];
-            Población2 = new int[cantPoblación, cantidadPuntos + 2];
-            mejorSolucionGlobal = new int[cantidadPuntos + 2];
-            mejorSolucionGlobal[cantidadPuntos + 1] = 999999999;
+            }            
 
             try
             {
@@ -141,7 +138,12 @@ namespace ProyectoGenetico
             {
                 nCiclos = 100;
             }
-            
+            Población = new int[cantPoblación, cantidadPuntos + 2];
+            Población2 = new int[cantPoblación, cantidadPuntos + 2];
+            mejorSolucionGlobal = new int[cantidadPuntos + 2];
+            mejorSolucionGlobal[cantidadPuntos + 1] = 999999999;
+            intentosSinMejora = Math.Pow(cantidadPuntos, 2) * 0.25;
+
             await Task.Run(() => {
                 InicializarPoblación();
                 GenerarPobInicial();
@@ -195,21 +197,21 @@ namespace ProyectoGenetico
 
                 if (ProcesoMutación())
                 {
-                    await Task.Run(() =>
-                    {
-                        MostrarRutasPob(distancias, listBoxDistancias, cantidadPuntos, cantidadPuntos - 2);
-                    });
+                    //await Task.Run(() =>
+                    //{
+                    //    MostrarRutasPob(distancias, listBoxDistancias, cantidadPuntos, cantidadPuntos - 2);
+                    //});
 
                     if (esPob1Actual)
                     {
                         await Task.Run(() =>
                         {
                             //Mostrar antes de que se hagan los cambios y después
-                            MostrarRutasPob(Población, listBox, cantPoblación, cantidadPuntos);
+                            //MostrarRutasPob(Población, listBox, cantPoblación, cantidadPuntos);
                             MutaciónSwap(Población);
                             CalcularAptitud(Población);
                             BuscarMejorSolución(Población);
-                            MostrarRutasPob(Población, listBox2, cantPoblación, cantidadPuntos);
+                            //MostrarRutasPob(Población, listBox2, cantPoblación, cantidadPuntos);
                         });
                         TituloPob1.Text = "Población 1: (antes de mutación)";
                         TituloPob2.Text = "Población 1: (después de mutación)";
@@ -219,11 +221,11 @@ namespace ProyectoGenetico
                         await Task.Run(() =>
                         {
                             //Mostrar antes de que se hagan los cambios y después
-                            MostrarRutasPob(Población2, listBox, cantPoblación, cantidadPuntos);
+                            //MostrarRutasPob(Población2, listBox, cantPoblación, cantidadPuntos);
                             MutaciónSwap(Población2);
                             CalcularAptitud(Población2);
                             BuscarMejorSolución(Población2);
-                            MostrarRutasPob(Población2, listBox2, cantPoblación, cantidadPuntos);
+                            //MostrarRutasPob(Población2, listBox2, cantPoblación, cantidadPuntos);
                         });
                         TituloPob1.Text = "Población 2: (antes de mutación)";
                         TituloPob2.Text = "Población 2: (después de mutación)";
@@ -265,7 +267,7 @@ namespace ProyectoGenetico
 
                 ciclo++;
                 tBoxGen.Text = ciclo.ToString();
-            } while (ciclo < nCiclos && búsquedasSinMejora < 28);            
+            } while (ciclo < nCiclos && búsquedasSinMejora < intentosSinMejora);            
 
             canvas.IsEnabled = true;
             Cursor = Cursors.Arrow;
