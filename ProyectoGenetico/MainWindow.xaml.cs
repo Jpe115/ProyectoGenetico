@@ -149,6 +149,7 @@ namespace ProyectoGenetico
             do
             {
                 await Task.Run(() => {
+                    //pobContraria es la población de salida o receptora o donde se guarda lo más nuevo
                     if (esPob1Actual)
                     {
                         ProcesoSelección(Población, Población2);
@@ -161,14 +162,28 @@ namespace ProyectoGenetico
                         BuscarMejorSolución(Población);
                         esPob1Actual = !esPob1Actual;
                     }
-                    
-                    ProcesoCruzamiento();
-                    if (seHizoCruzamiento)
+
+                    //pobContraria es la población de salida o donde se guarda lo más nuevo
+                    if (esPob1Actual)
                     {
-                        CalcularAptitud(Población);
-                        BuscarMejorSolución(Población);
-                        esPob1Actual = !esPob1Actual;
+                        ProcesoCruzamiento(Población, Población2);
+                        if (seHizoCruzamiento)
+                        {
+                            CalcularAptitud(Población2);
+                            BuscarMejorSolución(Población2);
+                            esPob1Actual = !esPob1Actual;
+                        }
                     }
+                    else
+                    {
+                        ProcesoCruzamiento(Población2, Población);
+                        if (seHizoCruzamiento)
+                        {
+                            CalcularAptitud(Población);
+                            BuscarMejorSolución(Población);
+                            esPob1Actual = !esPob1Actual;
+                        }
+                    }                                       
                 });
 
                 //Cambios a los listBox
@@ -357,7 +372,7 @@ namespace ProyectoGenetico
         }
 
         #region Cruzamiento
-        private void ProcesoCruzamiento()
+        private void ProcesoCruzamiento(int[,] pobContraria, int[,] pob)
         {
             if (probCruzamiento >= 0 && probCruzamiento <= 100)
             {
@@ -365,8 +380,8 @@ namespace ProyectoGenetico
                 if (prob <= probCruzamiento)
                 {
                     int[] valoresS1yS2 = ObtenerS1yS2();
-                    TwoPointCrossover(true, 1, valoresS1yS2);
-                    TwoPointCrossover(false, -1, valoresS1yS2);
+                    TwoPointCrossover(true, 1, valoresS1yS2, pob, pobContraria);
+                    TwoPointCrossover(false, -1, valoresS1yS2, pob, pobContraria);
                     seHizoCruzamiento = true;
                 }
                 else
@@ -396,7 +411,7 @@ namespace ProyectoGenetico
             return valoresS1yS2;
         }
 
-        private void TwoPointCrossover(bool esPar, int intercambio, int[] valoresS1yS2)
+        private void TwoPointCrossover(bool esPar, int intercambio, int[] valoresS1yS2, int[,] pob, int[,] pobContraria)
         {
             int parImpar = esPar ? 0 : 1;
             Dispatcher.Invoke(new Action(() =>
@@ -410,11 +425,11 @@ namespace ProyectoGenetico
                 //LLenar desde el padre 1 al hijo
                 for (int b = 1; b < cantidadPuntos + 2; b++)
                 {
-                    Población[a, 0] = 0;
+                    pob[a, 0] = 0;
                     if (b <= valoresS1yS2[0] || b >= valoresS1yS2[1])
                     {
                         //Pasar todos los elementos del padre 1 dentro de los rangos, al hijo
-                        Población[a, b] = Población2[a, b];                                             
+                        pob[a, b] = pobContraria[a, b];                                             
                     }                   
                 }
 
@@ -429,11 +444,11 @@ namespace ProyectoGenetico
                         bool bandera = false;
                         while (bandera == false)
                         {
-                            int valorActual = Población2[fila, columna];
+                            int valorActual = pobContraria[fila, columna];
 
-                            if (!EsDuplicado(a, valorActual, valoresS1yS2))
+                            if (!EsDuplicado(a, valorActual, valoresS1yS2, pobContraria))
                             {
-                                Población[a, b] = valorActual;
+                                pob[a, b] = valorActual;
                                 bandera = true;
                             }
                             else
@@ -447,15 +462,15 @@ namespace ProyectoGenetico
             }           
         }
 
-        private bool EsDuplicado(int a, int valor, int[] valoresS1yS2)
+        private bool EsDuplicado(int a, int valor, int[] valoresS1yS2, int[,] pobContraria)
         {
             for (int col = 1; col < cantidadPuntos; col++)
             {
-                if (Población2[a, col] != 0)
+                if (pobContraria[a, col] != 0)
                 {
                     if (col <= valoresS1yS2[0] || col >= valoresS1yS2[1])
                     {
-                        if (Población2[a, col] == valor)
+                        if (pobContraria[a, col] == valor)
                         {
                             return true;
                         }
