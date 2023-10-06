@@ -37,6 +37,7 @@ namespace ProyectoGenetico
         private int probMutación;
         private bool seHizoCruzamiento = false;
         private int nCiclos;
+        private int ciclo;
 
         private Dictionary<int, int> poblacionesChicas = new Dictionary<int, int> {
             { 1, 1 },
@@ -471,14 +472,9 @@ namespace ProyectoGenetico
             {
                 int[] N1yN2 = ObtenerS1yS2();
                 
-                int aux = Población[fila, N1yN2[0]];
-                pob[fila, N1yN2[0]] = pob[fila, N1yN2[1]];
-                pob[fila, N1yN2[1]] = aux;
-                
-                //if (fila == 0 || fila == 1)
-                //{
-                //    MessageBox.Show(N1yN2[0] + ", " + N1yN2[1]);
-                //}               
+                int aux = pob[fila, N1yN2[1]];
+                pob[fila, N1yN2[1]] = pob[fila, N1yN2[0]];
+                pob[fila, N1yN2[0]] = aux;         
             }           
         }
         #endregion
