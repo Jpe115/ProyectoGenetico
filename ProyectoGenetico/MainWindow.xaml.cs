@@ -90,6 +90,7 @@ namespace ProyectoGenetico
 
         private async void Ejecutar(object sender, RoutedEventArgs e)
         {
+            DateTime antes = DateTime.Now;
             Cursor = Cursors.Wait;
             canvas.IsEnabled = false;
             seHizoCruzamiento = false;
@@ -272,9 +273,13 @@ namespace ProyectoGenetico
 
                 ciclo++;
                 tBoxGen.Text = ciclo.ToString();
-            } while (ciclo < nCiclos);            
+            } while (ciclo < nCiclos);
 
+            DateTime después = DateTime.Now;
+            TimeSpan total = después - antes;
+            Tiempo.Text = total.ToString();
             canvas.IsEnabled = true;
+            btnCancelar.IsEnabled = false;
             Cursor = Cursors.Arrow;
         }
 
