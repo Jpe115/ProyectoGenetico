@@ -23,35 +23,20 @@
     
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1.5*"/>
-            <ColumnDefinition Width="1.5*" />
-            <ColumnDefinition Width="1.5*"/>
+            <ColumnDefinition Width="4*"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.5*"/>
-            <RowDefinition Height="5*"/>
-            <RowDefinition Height="0.5*"/>
-            <RowDefinition Height="3*"/>
+            <RowDefinition Height="8*"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <Border Grid.Column="0" Grid.RowSpan="5" BorderBrush="Black" BorderThickness="2.5" CornerRadius="2.5">
+        <Border Grid.Column="0" BorderBrush="Black" BorderThickness="2.5" CornerRadius="2.5">
             <Canvas x:Name="canvas" Background="White" MouseLeftButtonDown="Canvas_PintarPunto"/>
         </Border>
 
-        <TextBlock Text="Población 1:" x:Name="TituloPob1" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Center" FontSize="15" FontWeight="DemiBold"/>
-        <ScrollViewer Grid.Column="1" Grid.Row="1" Grid.RowSpan="3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-            <ListBox x:Name="listBox"/>
-        </ScrollViewer>
-
-        <TextBlock Text="Población 2:" x:Name="TituloPob2" Grid.Column="2" VerticalAlignment="Bottom" HorizontalAlignment="Center" FontSize="15" FontWeight="DemiBold"/>
-        <ScrollViewer Grid.Column="2" Grid.Row="1" Grid.RowSpan="3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-            <ListBox x:Name="listBox2"/>
-        </ScrollViewer>
-
-        <StackPanel Grid.Column="3" Grid.RowSpan="2" >
+        <StackPanel Grid.Column="1" Grid.RowSpan="2" >
             <TextBlock Text="Cantidad de población:" FontSize="14" TextWrapping="WrapWithOverflow" Margin="7,13,7,4"/>
             <TextBox x:Name="nPoblacion" Text="500" BorderThickness="2" FontSize="14" Margin="7,3"/>
             <Button x:Name="btnMostrar" Style="{StaticResource Btn}" Click="Ejecutar" Height="35" Width="150"
@@ -70,15 +55,9 @@
             <TextBox x:Name="Ciclos" Text="100" BorderThickness="2" FontSize="16" Margin="7,3"/>
         </StackPanel>
 
-        <TextBlock Grid.Row="2" Grid.Column="3" Text="Distancias:" FontWeight="DemiBold" FontSize="15" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,3"/>
-
-        <ScrollViewer Grid.Column="3" Grid.Row="3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-            <ListBox x:Name="listBoxDistancias" />
-        </ScrollViewer>
-
-        <ScrollViewer Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+        <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                <TextBlock x:Name="S1yS2Cruzamiento" Text="S1 y S2: " FontWeight="DemiBold" FontSize="15" Margin="5,5,15,5" VerticalAlignment="Center" />
+                
                 <TextBlock Text="Mejor solución:" FontWeight="DemiBold" FontSize="15" Margin="5" VerticalAlignment="Center"/>
                 <TextBox x:Name="tBoxSolución" Text="Por encontrar" IsReadOnly="True" VerticalAlignment="Center" FontSize="15"/>
 

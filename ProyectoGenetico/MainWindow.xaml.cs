@@ -142,7 +142,7 @@ namespace ProyectoGenetico
             Población2 = new int[cantPoblación, cantidadPuntos + 2];
             mejorSolucionGlobal = new int[cantidadPuntos + 2];
             mejorSolucionGlobal[cantidadPuntos + 1] = 999999999;
-            intentosSinMejora = Math.Pow(cantidadPuntos, 2) * 0.25;
+            intentosSinMejora = Math.Pow(cantidadPuntos, 2) * 0.33;
 
             await Task.Run(() => {
                 InicializarPoblación();
@@ -191,9 +191,9 @@ namespace ProyectoGenetico
                 });
 
                 //Cambios a los listBox
-                listBox.Items.Clear();
-                listBox2.Items.Clear();
-                listBoxDistancias.Items.Clear();
+                //listBox.Items.Clear();
+                //listBox2.Items.Clear();
+                //listBoxDistancias.Items.Clear();
 
                 if (ProcesoMutación())
                 {
@@ -213,8 +213,8 @@ namespace ProyectoGenetico
                             BuscarMejorSolución(Población);
                             //MostrarRutasPob(Población, listBox2, cantPoblación, cantidadPuntos);
                         });
-                        TituloPob1.Text = "Población 1: (antes de mutación)";
-                        TituloPob2.Text = "Población 1: (después de mutación)";
+                        //TituloPob1.Text = "Población 1: (antes de mutación)";
+                        //TituloPob2.Text = "Población 1: (después de mutación)";
                     }
                     else
                     {
@@ -227,8 +227,8 @@ namespace ProyectoGenetico
                             BuscarMejorSolución(Población2);
                             //MostrarRutasPob(Población2, listBox2, cantPoblación, cantidadPuntos);
                         });
-                        TituloPob1.Text = "Población 2: (antes de mutación)";
-                        TituloPob2.Text = "Población 2: (después de mutación)";
+                        //TituloPob1.Text = "Población 2: (antes de mutación)";
+                        //TituloPob2.Text = "Población 2: (después de mutación)";
                     }
                 }
                 else
@@ -236,38 +236,42 @@ namespace ProyectoGenetico
                     if (seHizoCruzamiento)
                     {
                         //Mostrar el resultado del cruzamiento
-                        TituloPob1.Text = "Población 1: (después del cruzamiento)";
-                        TituloPob2.Text = "Población 2:";
+                        //TituloPob1.Text = "Población 1: (después del cruzamiento)";
+                        //TituloPob2.Text = "Población 2:";
                     }
                     else
                     {
                         //Mostrar el resultado de la selección solamente
-                        TituloPob1.Text = "Población 1:";
-                        TituloPob2.Text = "Población 2: (Después de la selección)";
+                        //TituloPob1.Text = "Población 1:";
+                        //TituloPob2.Text = "Población 2: (Después de la selección)";
 
                     }
                     await Task.Run(() =>
                     {
-                        MostrarRutasPob(Población, listBox, cantPoblación, cantidadPuntos);
-                        MostrarRutasPob(Población2, listBox2, cantPoblación, cantidadPuntos);
-                        MostrarRutasPob(distancias, listBoxDistancias, cantidadPuntos, cantidadPuntos - 2);
+                        //MostrarRutasPob(Población, listBox, cantPoblación, cantidadPuntos);
+                        //MostrarRutasPob(Población2, listBox2, cantPoblación, cantidadPuntos);
+                        //MostrarRutasPob(distancias, listBoxDistancias, cantidadPuntos, cantidadPuntos - 2);
                     });
                 }
 
                 //Cambios al canvas
-                canvas.Children.Clear();
-                Thread th1 = new Thread(() =>
+                if(ciclo % 5 == 0)
                 {
-                    RedibujarPuntos();
-                    DibujarRuta();
-                });
-                th1.Start();
-                Thread th2 = new Thread(MostrarMejor);
-                th2.Start();
+                    canvas.Children.Clear();
+                    Thread th1 = new Thread(() =>
+                    {
+                        RedibujarPuntos();
+                        DibujarRuta();
+                    });
+                    th1.Start();
+                    Thread th2 = new Thread(MostrarMejor);
+                    th2.Start();
+                }
+                
 
                 ciclo++;
                 tBoxGen.Text = ciclo.ToString();
-            } while (ciclo < nCiclos && búsquedasSinMejora < intentosSinMejora);            
+            } while (ciclo < nCiclos && búsquedasSinMejora < 666);            
 
             canvas.IsEnabled = true;
             Cursor = Cursors.Arrow;
@@ -428,10 +432,10 @@ namespace ProyectoGenetico
         private void TwoPointCrossover(bool esPar, int intercambio, int[] valoresS1yS2, int[,] pob, int[,] pobContraria)
         {
             int parImpar = esPar ? 0 : 1;
-            Dispatcher.Invoke(new Action(() =>
-            {
-                S1yS2Cruzamiento.Text = ("S1 y S2: " + valoresS1yS2[0].ToString() + ", " + valoresS1yS2[1].ToString());
-            }));           
+            //Dispatcher.Invoke(new Action(() =>
+            //{
+            //    S1yS2Cruzamiento.Text = ("S1 y S2: " + valoresS1yS2[0].ToString() + ", " + valoresS1yS2[1].ToString());
+            //}));           
 
             //LLenar desde el padre 1 al hijo
             for (int a = parImpar; a < cantPoblación; a += 2)
