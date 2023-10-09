@@ -93,6 +93,7 @@ namespace ProyectoGenetico
             Cursor = Cursors.Wait;
             canvas.IsEnabled = false;
             seHizoCruzamiento = false;
+            btnCancelar.IsEnabled = true;
             ciclo = 0; 
 
             await Task.Run(ObtenerDistancias);
@@ -271,7 +272,7 @@ namespace ProyectoGenetico
 
                 ciclo++;
                 tBoxGen.Text = ciclo.ToString();
-            } while (ciclo < nCiclos && búsquedasSinMejora < 666);            
+            } while (ciclo < nCiclos);            
 
             canvas.IsEnabled = true;
             Cursor = Cursors.Arrow;
@@ -639,5 +640,10 @@ namespace ProyectoGenetico
             btn.BeginAnimation(Button.HeightProperty, heightAnimation);
         }
         #endregion
+
+        private void btnCancelar_Click(object sender, RoutedEventArgs e)
+        {
+            ciclo = nCiclos;
+        }
     }
 }
