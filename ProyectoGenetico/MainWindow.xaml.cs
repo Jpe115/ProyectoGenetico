@@ -51,6 +51,56 @@ namespace ProyectoGenetico
             { 6, 60 },
         };
 
+        public int CantPoblación { get => cantPoblación ; set { 
+                if (value >= 10 && value <= 2000) {
+                cantPoblación = value;
+                }
+                else
+                {
+                    throw new Exception("La cantidad de población debe estar entre 10 y 2000. Se usará el valor predeterminado de 500.");
+                }
+            }
+        }
+
+        public int ProbabilidadCruzamiento
+        {
+            get => probCruzamiento; 
+            set {
+                if (value >= 0 && value <= 100)
+                {
+                    probCruzamiento = value;
+                }
+                else
+                {
+                    throw new Exception("La probabilidad de cruzamiento debe estar entre 0 y 100. Se usará el valor predeterminado de 90.");
+                }
+            }
+        }
+
+        public int ProbabilidadMutación { get => probMutación; set { 
+                if(value >= 0 && value <= 100)
+                {
+                    probMutación = value;
+                }
+                else
+                {
+                    throw new Exception("La probabilidad de mutación debe estar entre 0 y 100. Se usará el valor predeterminado de 20.");
+                }
+            } 
+        }
+
+        public int NumeroCiclos { get => nCiclos; set {
+                if (value >= 0 && value <= 10000)
+                {
+
+                }
+                else
+                {
+                    throw new Exception("El número de ciclos debe estar entre 0 y 10,000. Se usará el valor predeterminado de 100.");
+                }
+            } 
+        }
+
         public MainWindow()
         {
             InitializeComponent();            
@@ -85,7 +135,10 @@ namespace ProyectoGenetico
             canvas.Children.Add(ellipse);
             coordenadas.Add(((int)mousePosition.X, (int)mousePosition.Y));
 
-            btnMostrar.IsEnabled = true;
+            if(cantidadPuntos > 5)
+            {
+                btnMostrar.IsEnabled = true;
+            }            
         }
 
         private async void Ejecutar(object sender, RoutedEventArgs e)
@@ -103,11 +156,12 @@ namespace ProyectoGenetico
             // y establecer 100 de población por default
             try
             {
-                cantPoblación = Convert.ToInt32(nPoblacion.Text);
+                CantPoblación = Convert.ToInt32(nPoblacion.Text);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 cantPoblación = 500;
+                MessageBox.Show(ex.Message, "Cantidad fuera de rango", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             if(cantidadPuntos < 7)
             {
@@ -116,30 +170,34 @@ namespace ProyectoGenetico
 
             try
             {
-                probCruzamiento = Convert.ToInt32(ProbCruzamiento.Text);
+                ProbabilidadCruzamiento = Convert.ToInt32(ProbCruzamiento.Text);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 probCruzamiento = 90;
+                MessageBox.Show(ex.Message, "Cantidad fuera de rango", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
 
             try
             {
-                probMutación = Convert.ToInt32(ProbMutación.Text);
+                ProbabilidadMutación = Convert.ToInt32(ProbMutación.Text);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 probMutación = 20;
+                MessageBox.Show(ex.Message, "Cantidad fuera de rango", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
 
             try
             {
-                nCiclos = Convert.ToInt32(Ciclos.Text);
+                NumeroCiclos = Convert.ToInt32(Ciclos.Text);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 nCiclos = 100;
+                MessageBox.Show(ex.Message, "Cantidad fuera de rango", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
+
             Población = new int[cantPoblación, cantidadPuntos + 2];
             Población2 = new int[cantPoblación, cantidadPuntos + 2];
             mejorSolucionGlobal = new int[cantidadPuntos + 2];
