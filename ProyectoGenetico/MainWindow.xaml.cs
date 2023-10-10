@@ -92,7 +92,7 @@ namespace ProyectoGenetico
         public int NumeroCiclos { get => nCiclos; set {
                 if (value >= 0 && value <= 10000)
                 {
-
+                    nCiclos = value;
                 }
                 else
                 {
