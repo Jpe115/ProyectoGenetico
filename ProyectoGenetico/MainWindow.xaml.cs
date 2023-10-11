@@ -41,6 +41,8 @@ namespace ProyectoGenetico
         private bool esPob1Actual = true;
         private int búsquedasSinMejora;
         private double intentosSinMejora;
+        private bool seAñadióPunto;
+        private int ejecucionesRepetidas;
 
         private Dictionary<int, int> poblacionesChicas = new Dictionary<int, int> {
             { 1, 1 },
@@ -138,7 +140,9 @@ namespace ProyectoGenetico
             if(cantidadPuntos > 5)
             {
                 btnMostrar.IsEnabled = true;
-            }            
+            }
+            seAñadióPunto = true;
+            ejecucionesRepetidas = 0;
         }
 
         private async void Ejecutar(object sender, RoutedEventArgs e)
@@ -148,9 +152,13 @@ namespace ProyectoGenetico
             canvas.IsEnabled = false;
             seHizoCruzamiento = false;
             btnCancelar.IsEnabled = true;
-            ciclo = 0; 
+            ciclo = 0;
 
-            await Task.Run(ObtenerDistancias);
+            if (seAñadióPunto)
+            {
+                await Task.Run(ObtenerDistancias);
+                seAñadióPunto = false;
+            }            
 
             //elegir cantidad de población para cuando son menos de 7 ciudades
             // y establecer 100 de población por default
@@ -198,11 +206,15 @@ namespace ProyectoGenetico
                 MessageBox.Show(ex.Message, "Cantidad fuera de rango", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
 
-            Población = new int[cantPoblación, cantidadPuntos + 2];
-            Población2 = new int[cantPoblación, cantidadPuntos + 2];
-            mejorSolucionGlobal = new int[cantidadPuntos + 2];
-            mejorSolucionGlobal[cantidadPuntos + 1] = 999999999;
-            intentosSinMejora = Math.Pow(cantidadPuntos, 2) * 0.33;
+            if(ejecucionesRepetidas == 0)
+            {
+                Población = new int[cantPoblación, cantidadPuntos + 2];
+                Población2 = new int[cantPoblación, cantidadPuntos + 2];
+                mejorSolucionGlobal = new int[cantidadPuntos + 2];
+                mejorSolucionGlobal[cantidadPuntos + 1] = 999999999;
+                intentosSinMejora = Math.Pow(cantidadPuntos, 2) * 0.33;
+            }
+            
 
             await Task.Run(() => {
                 InicializarPoblación();
@@ -250,69 +262,28 @@ namespace ProyectoGenetico
                     }                                       
                 });
 
-                //Cambios a los listBox
-                //listBox.Items.Clear();
-                //listBox2.Items.Clear();
-                //listBoxDistancias.Items.Clear();
-
                 if (ProcesoMutación())
                 {
-                    //await Task.Run(() =>
-                    //{
-                    //    MostrarRutasPob(distancias, listBoxDistancias, cantidadPuntos, cantidadPuntos - 2);
-                    //});
-
                     if (esPob1Actual)
                     {
                         await Task.Run(() =>
-                        {
-                            //Mostrar antes de que se hagan los cambios y después
-                            //MostrarRutasPob(Población, listBox, cantPoblación, cantidadPuntos);
+                        {                       
                             MutaciónSwap(Población);
                             CalcularAptitud(Población);
                             BuscarMejorSolución(Población);
-                            //MostrarRutasPob(Población, listBox2, cantPoblación, cantidadPuntos);
                         });
-                        //TituloPob1.Text = "Población 1: (antes de mutación)";
-                        //TituloPob2.Text = "Población 1: (después de mutación)";
                     }
                     else
                     {
                         await Task.Run(() =>
-                        {
-                            //Mostrar antes de que se hagan los cambios y después
-                            //MostrarRutasPob(Población2, listBox, cantPoblación, cantidadPuntos);
+                        {                            
                             MutaciónSwap(Población2);
                             CalcularAptitud(Población2);
-                            BuscarMejorSolución(Población2);
-                            //MostrarRutasPob(Población2, listBox2, cantPoblación, cantidadPuntos);
+                            BuscarMejorSolución(Población2);                           
                         });
-                        //TituloPob1.Text = "Población 2: (antes de mutación)";
-                        //TituloPob2.Text = "Población 2: (después de mutación)";
                     }
                 }
-                else
-                {
-                    if (seHizoCruzamiento)
-                    {
-                        //Mostrar el resultado del cruzamiento
-                        //TituloPob1.Text = "Población 1: (después del cruzamiento)";
-                        //TituloPob2.Text = "Población 2:";
-                    }
-                    else
-                    {
-                        //Mostrar el resultado de la selección solamente
-                        //TituloPob1.Text = "Población 1:";
-                        //TituloPob2.Text = "Población 2: (Después de la selección)";
-
-                    }
-                    await Task.Run(() =>
-                    {
-                        //MostrarRutasPob(Población, listBox, cantPoblación, cantidadPuntos);
-                        //MostrarRutasPob(Población2, listBox2, cantPoblación, cantidadPuntos);
-                        //MostrarRutasPob(distancias, listBoxDistancias, cantidadPuntos, cantidadPuntos - 2);
-                    });
-                }
+                
 
                 //Cambios al canvas
                 if(ciclo % 5 == 0)
@@ -332,7 +303,8 @@ namespace ProyectoGenetico
                 ciclo++;
                 tBoxGen.Text = ciclo.ToString();
             } while (ciclo < nCiclos);
-
+            
+            ejecucionesRepetidas++;
             DateTime después = DateTime.Now;
             TimeSpan total = después - antes;
             Tiempo.Text = total.ToString();
@@ -702,11 +674,11 @@ namespace ProyectoGenetico
             btn.BeginAnimation(Button.WidthProperty, widthAnimation);
             btn.BeginAnimation(Button.HeightProperty, heightAnimation);
         }
-        #endregion
 
         private void btnCancelar_Click(object sender, RoutedEventArgs e)
         {
             ciclo = nCiclos;
         }
+        #endregion
     }
 }
