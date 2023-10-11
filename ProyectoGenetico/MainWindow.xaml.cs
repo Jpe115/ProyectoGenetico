@@ -139,7 +139,7 @@ namespace ProyectoGenetico
 
             if(cantidadPuntos > 5)
             {
-                btnMostrar.IsEnabled = true;
+                btnEjecutar.IsEnabled = true;
             }
             seAñadióPunto = true;
             ejecucionesRepetidas = 0;
@@ -150,8 +150,9 @@ namespace ProyectoGenetico
             DateTime antes = DateTime.Now;
             Cursor = Cursors.Wait;
             canvas.IsEnabled = false;
-            seHizoCruzamiento = false;
+            btnEjecutar.IsEnabled = false;
             btnCancelar.IsEnabled = true;
+            seHizoCruzamiento = false;
             ciclo = 0;
 
             if (seAñadióPunto)
@@ -297,8 +298,7 @@ namespace ProyectoGenetico
                     th1.Start();
                     Thread th2 = new Thread(MostrarMejor);
                     th2.Start();
-                }
-                
+                }                
 
                 ciclo++;
                 tBoxGen.Text = ciclo.ToString();
@@ -309,6 +309,7 @@ namespace ProyectoGenetico
             TimeSpan total = después - antes;
             Tiempo.Text = total.ToString();
             canvas.IsEnabled = true;
+            btnEjecutar.IsEnabled = true;
             btnCancelar.IsEnabled = false;
             Cursor = Cursors.Arrow;
         }
