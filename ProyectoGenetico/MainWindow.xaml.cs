@@ -26,7 +26,7 @@ namespace ProyectoGenetico
         private bool primerPunto = true;
         private string matrizMostrar = "";
         private int[,] distancias = new int[1, 1];
-        private int cantidadPuntos = 0;
+        private int cantidadPuntos;
         private int cantPoblación;
         private int[,] Población = new int[1, 1];
         private Random rand = new Random();
@@ -43,6 +43,8 @@ namespace ProyectoGenetico
         private double intentosSinMejora;
         private bool seAñadióPunto;
         private int ejecucionesRepetidas;
+        private int cantPoblaciónActual;
+        private bool cantPoblaciónCambió;
 
         private Dictionary<int, int> poblacionesChicas = new Dictionary<int, int> {
             { 1, 1 },
@@ -157,8 +159,7 @@ namespace ProyectoGenetico
 
             if (seAñadióPunto)
             {
-                await Task.Run(ObtenerDistancias);
-                seAñadióPunto = false;
+                await Task.Run(ObtenerDistancias);                
             }            
 
             //elegir cantidad de población para cuando son menos de 7 ciudades
@@ -172,10 +173,19 @@ namespace ProyectoGenetico
                 cantPoblación = 500;
                 MessageBox.Show(ex.Message, "Cantidad fuera de rango", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
-            if(cantidadPuntos < 7)
+            if (cantidadPuntos < 7)
             {
                 cantPoblación = poblacionesChicas[cantidadPuntos];
-            }            
+            }
+            if (cantPoblaciónActual != CantPoblación)
+            {
+                cantPoblaciónCambió = true;
+                cantPoblaciónActual = CantPoblación;
+            }
+            else
+            {
+                cantPoblaciónCambió = false;
+            }
 
             try
             {
@@ -206,22 +216,29 @@ namespace ProyectoGenetico
                 nCiclos = 100;
                 MessageBox.Show(ex.Message, "Cantidad fuera de rango", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
-
-            if(ejecucionesRepetidas == 0)
-            {
-                Población = new int[cantPoblación, cantidadPuntos + 2];
-                Población2 = new int[cantPoblación, cantidadPuntos + 2];
+           
+            if (ejecucionesRepetidas == 0)
+            {                
                 mejorSolucionGlobal = new int[cantidadPuntos + 2];
                 mejorSolucionGlobal[cantidadPuntos + 1] = 999999999;
                 intentosSinMejora = Math.Pow(cantidadPuntos, 2) * 0.33;
             }
             
+            if (cantPoblaciónCambió || seAñadióPunto)
+            {
+                Población = new int[cantPoblación, cantidadPuntos + 2];
+                Población2 = new int[cantPoblación, cantidadPuntos + 2];
 
-            await Task.Run(() => {
-                InicializarPoblación();
-                GenerarPobInicial();
-                CalcularAptitud(Población);                
-            });
+                await Task.Run(() => {
+                    InicializarPoblación(Población);
+                    GenerarPobInicial(Población);
+                    CalcularAptitud(Población);
+
+                    InicializarPoblación(Población2);
+                    GenerarPobInicial(Población2);
+                    CalcularAptitud(Población2);
+                });
+            }            
 
             do
             {
@@ -272,6 +289,7 @@ namespace ProyectoGenetico
                             MutaciónSwap(Población);
                             CalcularAptitud(Población);
                             BuscarMejorSolución(Población);
+                            esPob1Actual = !esPob1Actual;
                         });
                     }
                     else
@@ -280,7 +298,8 @@ namespace ProyectoGenetico
                         {                            
                             MutaciónSwap(Población2);
                             CalcularAptitud(Población2);
-                            BuscarMejorSolución(Población2);                           
+                            BuscarMejorSolución(Población2);
+                            esPob1Actual = !esPob1Actual;
                         });
                     }
                 }
@@ -311,6 +330,7 @@ namespace ProyectoGenetico
             canvas.IsEnabled = true;
             btnEjecutar.IsEnabled = true;
             btnCancelar.IsEnabled = false;
+            seAñadióPunto = false;
             Cursor = Cursors.Arrow;
         }
 
@@ -331,19 +351,19 @@ namespace ProyectoGenetico
         }
 
         #region Población
-        private void InicializarPoblación()
+        private void InicializarPoblación(int[,] pob)
         {
             for(int a = 0; a < cantPoblación; a++)
             {
                 for(int b = 0; b < cantidadPuntos; b++)
                 {
-                    Población[a, b] = b;
+                    pob[a, b] = b;
                 }
-                Población[a, cantidadPuntos] = 0;
+                pob[a, cantidadPuntos] = 0;
             }
         }
 
-        private void GenerarPobInicial()
+        private void GenerarPobInicial(int[,] pob)
         {
             for (int a = 0; a < cantPoblación; a++)
             {
@@ -351,12 +371,12 @@ namespace ProyectoGenetico
                 {
                     int temp = Población[a, b];
                     int random = rand.Next(1, cantidadPuntos - 1);
-                    Población[a, b] = Población[a, random];
-                    Población[a, random] = temp;
+                    pob[a, b] = pob[a, random];
+                    pob[a, random] = temp;
                     
                 }
-                Población[a, cantidadPuntos] = 0;
-                Población[a, cantidadPuntos +1] = 0;
+                pob[a, cantidadPuntos] = 0;
+                pob[a, cantidadPuntos +1] = 0;
             }
         }
 
@@ -497,7 +517,7 @@ namespace ProyectoGenetico
                     if ( !(b <= valoresS1yS2[0] || b >= valoresS1yS2[1]) )
                     {
                         bool bandera = false;
-                        while (bandera == false)
+                        while (bandera == false && columna < cantidadPuntos)
                         {
                             int valorActual = pobContraria[fila, columna];
 
