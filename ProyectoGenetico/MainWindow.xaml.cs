@@ -369,7 +369,7 @@ namespace ProyectoGenetico
             {
                 for (int b = 1; b < cantidadPuntos; b++)
                 {
-                    int temp = Población[a, b];
+                    int temp = pob[a, b];
                     int random = rand.Next(1, cantidadPuntos - 1);
                     pob[a, b] = pob[a, random];
                     pob[a, random] = temp;
