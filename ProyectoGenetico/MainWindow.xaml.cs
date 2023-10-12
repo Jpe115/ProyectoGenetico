@@ -160,8 +160,9 @@ namespace ProyectoGenetico
             if (seAñadióPunto)
             {
                 await Task.Run(ObtenerDistancias);                
-            }            
+            }
 
+            #region Obtención de variables del usuario
             //elegir cantidad de población para cuando son menos de 7 ciudades
             // y establecer 100 de población por default
             try
@@ -177,6 +178,7 @@ namespace ProyectoGenetico
             {
                 cantPoblación = poblacionesChicas[cantidadPuntos];
             }
+            //Comprobar si el usuario cambió la cantidad de la población
             if (cantPoblaciónActual != CantPoblación)
             {
                 cantPoblaciónCambió = true;
@@ -216,12 +218,13 @@ namespace ProyectoGenetico
                 nCiclos = 100;
                 MessageBox.Show(ex.Message, "Cantidad fuera de rango", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
-           
+            #endregion
+
             if (ejecucionesRepetidas == 0)
             {                
                 mejorSolucionGlobal = new int[cantidadPuntos + 2];
                 mejorSolucionGlobal[cantidadPuntos + 1] = 999999999;
-                intentosSinMejora = Math.Pow(cantidadPuntos, 2) * 0.33;
+                //intentosSinMejora = Math.Pow(cantidadPuntos, 2) * 0.33;
             }
             
             if (cantPoblaciónCambió || seAñadióPunto)
@@ -302,8 +305,7 @@ namespace ProyectoGenetico
                             esPob1Actual = !esPob1Actual;
                         });
                     }
-                }
-                
+                }                
 
                 //Cambios al canvas
                 if(ciclo % 5 == 0)
@@ -474,13 +476,6 @@ namespace ProyectoGenetico
         {
             int S1 = rand.Next(1, cantidadPuntos - 3);
             int S2 = rand.Next(S1 + 1, cantidadPuntos);
-            int temp = 0;
-            if (S1 > S2)
-            {
-                temp = S1;
-                S1 = S2; 
-                S2 = temp;
-            }
 
             int[] valoresS1yS2 = { S1, S2 };
             return valoresS1yS2;
@@ -488,11 +483,7 @@ namespace ProyectoGenetico
 
         private void TwoPointCrossover(bool esPar, int intercambio, int[] valoresS1yS2, int[,] pob, int[,] pobContraria)
         {
-            int parImpar = esPar ? 0 : 1;
-            //Dispatcher.Invoke(new Action(() =>
-            //{
-            //    S1yS2Cruzamiento.Text = ("S1 y S2: " + valoresS1yS2[0].ToString() + ", " + valoresS1yS2[1].ToString());
-            //}));           
+            int parImpar = esPar ? 0 : 1;         
 
             //LLenar desde el padre 1 al hijo
             for (int a = parImpar; a < cantPoblación; a += 2)
