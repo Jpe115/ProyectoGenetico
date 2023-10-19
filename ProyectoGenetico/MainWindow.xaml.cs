@@ -506,14 +506,10 @@ namespace ProyectoGenetico
             for (int a = parImpar; a < cantPoblación; a += 2)
             {
                 //LLenar desde el padre 1 al hijo
-                for (int b = 1; b < cantidadPuntos + 2; b++)
+                for (int b = 1; b <= punto; b++)
                 {
-                    pob[a, 0] = 0;
-                    if (b <= punto)
-                    {
-                        //Pasar todos los elementos del padre 1 dentro de los rangos, al hijo
-                        pob[a, b] = pobContraria[a, b];
-                    }
+                    //Pasar todos los elementos del padre 1 dentro de los rangos, al hijo
+                    pob[a, b] = pobContraria[a, b];
                 }
 
                 //Verificar que no sea duplicado                
@@ -547,16 +543,13 @@ namespace ProyectoGenetico
 
         private bool EsDuplicado(int a, int valor, int punto, int[,] pobContraria)
         {
-            for (int col = 1; col < cantidadPuntos; col++)
+            for (int col = 1; col <= punto; col++)
             {
                 if (pobContraria[a, col] != 0)
                 {
-                    if (col <= punto)
+                    if (pobContraria[a, col] == valor)
                     {
-                        if (pobContraria[a, col] == valor)
-                        {
-                            return true;
-                        }
+                        return true;
                     }
                 }
             }
@@ -582,7 +575,6 @@ namespace ProyectoGenetico
                 //LLenar desde el padre 1 al hijo
                 for (int b = 1; b < cantidadPuntos + 2; b++)
                 {
-                    pob[a, 0] = 0;
                     if (b <= valoresS1yS2[0] || b >= valoresS1yS2[1])
                     {
                         //Pasar todos los elementos del padre 1 dentro de los rangos, al hijo
