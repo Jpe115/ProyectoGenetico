@@ -779,5 +779,10 @@ namespace ProyectoGenetico
             ciclo = nCiclos;
         }
         #endregion
+
+        private void btnReiniciar_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

@@ -65,6 +65,10 @@
                 Content="Cancelar" FontSize="16" Margin="9" Background="MediumVioletRed"
                 Padding="4" MouseEnter="btnMostrar_MouseEnter" MouseLeave="btnMostrar_MouseLeave"
                 BorderThickness="2.5" BorderBrush="Black" IsEnabled="False"/>
+            <Button x:Name="btnReiniciar" Click="btnReiniciar_Click" Height="35" Width="150"
+                Content="Reiniciar" FontSize="16" Margin="9" Background="DodgerBlue"
+                Padding="4" MouseEnter="btnMostrar_MouseEnter" MouseLeave="btnMostrar_MouseLeave"
+                BorderThickness="2.5" BorderBrush="Black" IsEnabled="False"/>
         </StackPanel>
 
         <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
