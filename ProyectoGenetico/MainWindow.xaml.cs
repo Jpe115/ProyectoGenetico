@@ -20,6 +20,12 @@ namespace ProyectoGenetico
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+    enum TipoCruzamiento
+    {
+        TPX,
+        OPX
+    }
+    
     public partial class MainWindow : Window
     {
         private List<(int, int)> coordenadas = new List<(int, int)>();
@@ -45,6 +51,7 @@ namespace ProyectoGenetico
         private int ejecucionesRepetidas;
         private int cantPoblaciónActual;
         private bool cantPoblaciónCambió;
+        private TipoCruzamiento cruzamiento;
 
         private Dictionary<int, int> poblacionesChicas = new Dictionary<int, int> {
             { 1, 1 },
@@ -217,6 +224,15 @@ namespace ProyectoGenetico
             {
                 nCiclos = 100;
                 MessageBox.Show(ex.Message, "Cantidad fuera de rango", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+
+            if(CruzamientoElegido.SelectedIndex == 0)
+            {
+                cruzamiento = TipoCruzamiento.TPX;
+            }
+            else
+            {
+                cruzamiento = TipoCruzamiento.OPX;
             }
             #endregion
 
@@ -456,10 +472,19 @@ namespace ProyectoGenetico
                 int prob = rand.Next(1, 100);
                 if (prob <= probCruzamiento)
                 {
-                    int[] valoresS1yS2 = ObtenerS1yS2();
-                    TwoPointCrossover(true, 1, valoresS1yS2, pob, pobContraria);
-                    TwoPointCrossover(false, -1, valoresS1yS2, pob, pobContraria);
-                    seHizoCruzamiento = true;
+                    if(cruzamiento == TipoCruzamiento.TPX)
+                    {
+                        int[] valoresS1yS2 = ObtenerS1yS2();
+                        TwoPointCrossover(true, 1, valoresS1yS2, pob, pobContraria);
+                        TwoPointCrossover(false, -1, valoresS1yS2, pob, pobContraria);
+                        seHizoCruzamiento = true;
+                    }
+                    else
+                    {
+                        OnePointCrossover(true, 1, pob, pobContraria);
+                        OnePointCrossover(false, -1, pob, pobContraria);
+                        seHizoCruzamiento = true;
+                    }
                 }
                 else
                 {
@@ -470,6 +495,67 @@ namespace ProyectoGenetico
             {
                 seHizoCruzamiento = false;
             }
+        }
+
+        private void OnePointCrossover(bool esPar, int intercambio, int[,] pob, int[,] pobContraria)
+        {
+            int parImpar = esPar ? 0 : 1;
+            int punto = rand.Next(3, cantidadPuntos - 3);
+
+            //LLenar desde el padre 1 al hijo
+            for (int a = parImpar; a < cantPoblación; a += 2)
+            {
+                for (int b = 1; b < cantidadPuntos + 2; b++)
+                {
+                    if (b <= punto)
+                    {
+                        //Pasar todos los elementos del padre 1 dentro del rango, al hijo
+                        pob[a, b] = pobContraria[a, b];
+                    }
+                }
+                //Verificar que no sea duplicado
+                //intercambio es para tomar el valor de la fila del padre 2
+                int fila = a + intercambio;
+                int columna = 1;
+
+                for (int b = punto + 1; b < cantidadPuntos; b++)
+                {
+                    bool bandera = false;
+                    while (bandera == false && columna < cantidadPuntos)
+                    {
+                        int valorActual = pobContraria[fila, columna];
+
+                        if (NoEsDuplicado(a, valorActual, punto, pobContraria))
+                        {
+                            pob[a, b] = valorActual;
+                            bandera = true;
+                        }
+                        else
+                        {
+                            columna++;
+                        }
+                    }
+                    columna++;
+                }
+            }
+        }
+
+        private bool NoEsDuplicado(int a, int valor, int punto, int[,] pobContraria)
+        {
+            for (int columna = 1; columna < cantidadPuntos; columna++)
+            {
+                if (pobContraria[a, columna] != 0)
+                {
+                    if (columna <= punto)
+                    {
+                        if (pobContraria[a, columna] == valor)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
         }
 
         private int[] ObtenerS1yS2()
