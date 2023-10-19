@@ -43,7 +43,11 @@
                     Content="Ejecutar" FontSize="16" Margin="9" 
                     Padding="4" MouseEnter="btnMostrar_MouseEnter" MouseLeave="btnMostrar_MouseLeave"
                     BorderThickness="2.5" BorderBrush="Black" IsEnabled="False"/>
-            <TextBlock Text="Cruzamiento: TPX" TextWrapping="WrapWithOverflow" FontSize="14" FontWeight="SemiBold" Margin="7,4,7,0"/>
+            <TextBlock Text="Cruzamiento:" TextWrapping="WrapWithOverflow" FontSize="14" FontWeight="SemiBold" Margin="7,4,7,0"/>
+            <ComboBox Margin="15,3" SelectedIndex="0">
+                <ComboBoxItem Content="TPX"/>
+                <ComboBoxItem Content="Nuevo"/>
+            </ComboBox>
             <TextBlock Text="Probabilidad de cruzamiento:" TextWrapping="WrapWithOverflow" FontSize="14" Margin="7,4,7,4"/>
             <TextBox x:Name="ProbCruzamiento" Text="90" BorderThickness="2" FontSize="16" Margin="7,3"/>
 
