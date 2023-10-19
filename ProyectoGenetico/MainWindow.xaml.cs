@@ -784,6 +784,15 @@ namespace ProyectoGenetico
         private void btnReiniciar_Click(object sender, RoutedEventArgs e)
         {
             canvas.Children.Clear();
+            btnEjecutar.IsEnabled = false;
+            tBoxGen.Text = "0";
+            tBoxSolución.Text = "Por encontrar";
+            mejorSolucionGlobal = new int[cantidadPuntos + 2];
+            mejorSolucionGlobal[cantidadPuntos + 1] = 999999999;
+            Población = new int[cantPoblación, cantidadPuntos + 2];
+            Población2 = new int[cantPoblación, cantidadPuntos + 2];
+            cantidadPuntos = 0;
+            coordenadas.Clear();
             btnReiniciar.IsEnabled = false;
         }
     }
