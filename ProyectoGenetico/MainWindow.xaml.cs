@@ -180,6 +180,7 @@ namespace ProyectoGenetico
             {
                 cantPoblación = 500;
                 MessageBox.Show(ex.Message, "Cantidad fuera de rango", MessageBoxButton.OK, MessageBoxImage.Warning);
+                nPoblacion.Text = 500.ToString();
             }
             if (cantidadPuntos < 7)
             {
@@ -204,6 +205,7 @@ namespace ProyectoGenetico
             {
                 probCruzamiento = 90;
                 MessageBox.Show(ex.Message, "Cantidad fuera de rango", MessageBoxButton.OK, MessageBoxImage.Warning);
+                ProbCruzamiento.Text = 90.ToString();
             }
 
             try
@@ -214,6 +216,7 @@ namespace ProyectoGenetico
             {
                 probMutación = 20;
                 MessageBox.Show(ex.Message, "Cantidad fuera de rango", MessageBoxButton.OK, MessageBoxImage.Warning);
+                ProbMutación.Text = 20.ToString();
             }
 
             try
@@ -224,6 +227,7 @@ namespace ProyectoGenetico
             {
                 nCiclos = 100;
                 MessageBox.Show(ex.Message, "Cantidad fuera de rango", MessageBoxButton.OK, MessageBoxImage.Warning);
+                Ciclos.Text = 100.ToString();
             }
 
             if(CruzamientoElegido.SelectedIndex == 0)
@@ -324,7 +328,7 @@ namespace ProyectoGenetico
                 }                
 
                 //Cambios al canvas
-                if(ciclo % 5 == 0)
+                if(ciclo % 10 == 0)
                 {
                     canvas.Children.Clear();
                     Thread th1 = new Thread(() =>
