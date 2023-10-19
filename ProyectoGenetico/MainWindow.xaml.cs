@@ -150,6 +150,7 @@ namespace ProyectoGenetico
             {
                 btnEjecutar.IsEnabled = true;
             }
+            btnReiniciar.IsEnabled = true;
             seAñadióPunto = true;
             ejecucionesRepetidas = 0;
         }
@@ -782,7 +783,8 @@ namespace ProyectoGenetico
 
         private void btnReiniciar_Click(object sender, RoutedEventArgs e)
         {
-
+            canvas.Children.Clear();
+            btnReiniciar.IsEnabled = false;
         }
     }
 }
