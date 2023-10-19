@@ -787,10 +787,10 @@ namespace ProyectoGenetico
             btnEjecutar.IsEnabled = false;
             tBoxGen.Text = "0";
             tBoxSolución.Text = "Por encontrar";
-            mejorSolucionGlobal = new int[cantidadPuntos + 2];
-            mejorSolucionGlobal[cantidadPuntos + 1] = 999999999;
-            Población = new int[cantPoblación, cantidadPuntos + 2];
-            Población2 = new int[cantPoblación, cantidadPuntos + 2];
+            mejorSolucionGlobal = new int[1];
+            mejorSolucionGlobal[0] = 999999999;
+            Población = new int[1, 1];
+            Población2 = new int[1, 1];
             cantidadPuntos = 0;
             coordenadas.Clear();
             btnReiniciar.IsEnabled = false;
