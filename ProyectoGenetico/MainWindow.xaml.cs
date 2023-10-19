@@ -481,8 +481,9 @@ namespace ProyectoGenetico
                     }
                     else
                     {
-                        OnePointCrossover(true, 1, pob, pobContraria);
-                        OnePointCrossover(false, -1, pob, pobContraria);
+                        int S1 = rand.Next(3, cantidadPuntos - 3);
+                        OnePointCrossover(true, 1, S1, pob, pobContraria);
+                        OnePointCrossover(false, -1, S1, pob, pobContraria);
                         seHizoCruzamiento = true;
                     }
                 }
@@ -497,58 +498,62 @@ namespace ProyectoGenetico
             }
         }
 
-        private void OnePointCrossover(bool esPar, int intercambio, int[,] pob, int[,] pobContraria)
+        private void OnePointCrossover(bool esPar, int intercambio, int punto, int[,] pob, int[,] pobContraria)
         {
             int parImpar = esPar ? 0 : 1;
-            int punto = rand.Next(3, cantidadPuntos - 3);
 
             //LLenar desde el padre 1 al hijo
             for (int a = parImpar; a < cantPoblación; a += 2)
             {
+                //LLenar desde el padre 1 al hijo
                 for (int b = 1; b < cantidadPuntos + 2; b++)
                 {
+                    pob[a, 0] = 0;
                     if (b <= punto)
                     {
-                        //Pasar todos los elementos del padre 1 dentro del rango, al hijo
+                        //Pasar todos los elementos del padre 1 dentro de los rangos, al hijo
                         pob[a, b] = pobContraria[a, b];
                     }
                 }
-                //Verificar que no sea duplicado
-                //intercambio es para tomar el valor de la fila del padre 2
+
+                //Verificar que no sea duplicado                
                 int fila = a + intercambio;
                 int columna = 1;
 
-                for (int b = punto + 1; b < cantidadPuntos; b++)
+                for (int b = 2; b < cantidadPuntos; b++)
                 {
-                    bool bandera = false;
-                    while (bandera == false && columna < cantidadPuntos)
+                    if (!(b <= punto))
                     {
-                        int valorActual = pobContraria[fila, columna];
+                        bool bandera = false;
+                        while (bandera == false && columna < cantidadPuntos)
+                        {
+                            int valorActual = pobContraria[fila, columna];
 
-                        if (NoEsDuplicado(a, valorActual, punto, pobContraria))
-                        {
-                            pob[a, b] = valorActual;
-                            bandera = true;
+                            if (!EsDuplicado(a, valorActual, punto, pobContraria))
+                            {
+                                pob[a, b] = valorActual;
+                                bandera = true;
+                            }
+                            else
+                            {
+                                columna++;
+                            }
                         }
-                        else
-                        {
-                            columna++;
-                        }
+                        columna++;
                     }
-                    columna++;
                 }
             }
         }
 
-        private bool NoEsDuplicado(int a, int valor, int punto, int[,] pobContraria)
+        private bool EsDuplicado(int a, int valor, int punto, int[,] pobContraria)
         {
-            for (int columna = 1; columna < cantidadPuntos; columna++)
+            for (int col = 1; col < cantidadPuntos; col++)
             {
-                if (pobContraria[a, columna] != 0)
+                if (pobContraria[a, col] != 0)
                 {
-                    if (columna <= punto)
+                    if (col <= punto)
                     {
-                        if (pobContraria[a, columna] == valor)
+                        if (pobContraria[a, col] == valor)
                         {
                             return true;
                         }
