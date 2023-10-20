@@ -257,6 +257,7 @@ namespace ProyectoGenetico
 
             //Redondear en caso de ser necesario para la mutación switch2
             cantidadDePuntosEntre2 = (int)Math.Ceiling((double)cantidadPuntos / 2);
+            cantidadDePuntosEntre2--;
             #endregion
 
             if (ejecucionesRepetidas == 0)
@@ -330,11 +331,13 @@ namespace ProyectoGenetico
                     }
                     else
                     {
+                        MostrarRutasPob(Población2, LB1, 50, cantidadPuntos);
                         if (ProcesoMutación(Población2))
-                        {
+                        {                           
                             CalcularAptitud(Población2);
                             BuscarMejorSolución(Población2);
                             esPob1Actual = !esPob1Actual;
+                            MostrarRutasPob(Población2, LB2, 50, cantidadPuntos);
                         }
                     }
                 });             
@@ -686,10 +689,10 @@ namespace ProyectoGenetico
         }
 
         private void MutaciónSwitch2(int[,] pob)
-        {
-            int punto = rand.Next(1, cantidadPuntos / 2);
+        {           
             for (int fila = 0; fila < cantPoblación; fila++)
             {
+                int punto = rand.Next(1, (cantidadPuntos / 2) + 1);
                 int aux = pob[fila, punto];
                 pob[fila, punto] = pob[fila, punto + cantidadDePuntosEntre2];
                 pob[fila, punto + cantidadDePuntosEntre2] = aux;

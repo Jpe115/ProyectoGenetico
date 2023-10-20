@@ -23,8 +23,10 @@
     
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="4*"/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
@@ -54,7 +56,7 @@
             <TextBlock Text="Mutación:" FontWeight="SemiBold" TextWrapping="WrapWithOverflow" FontSize="14" Margin="7,4,7,0"/>
             <ComboBox x:Name="MutaciónElegida" Margin="15,3" SelectedIndex="0">
                 <ComboBoxItem Content="Swap"/>
-                <ComboBoxItem Content="Switch2"/>
+                <ComboBoxItem Content="Halves swap"/>
             </ComboBox>
             <TextBlock Text="Probabilidad de mutación:" TextWrapping="WrapWithOverflow" FontSize="14" Margin="7,4,7,4"/>
             <TextBox x:Name="ProbMutación" Text="20" BorderThickness="2" FontSize="16" Margin="7,3"/>
@@ -75,7 +77,7 @@
                 BorderThickness="2.5" BorderBrush="Black" IsEnabled="False"/>
         </StackPanel>
 
-        <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+        <ScrollViewer Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                 
                 <TextBlock Text="Mejor solución:" FontWeight="DemiBold" FontSize="15" Margin="5" VerticalAlignment="Center"/>
@@ -86,5 +88,7 @@
             </StackPanel>
         </ScrollViewer>
 
+        <ListBox x:Name="LB1" Grid.Column="2"/>
+        <ListBox x:Name="LB2" Grid.Column="3"/>
     </Grid>
 </Window>
