@@ -23,10 +23,8 @@
     
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
@@ -77,9 +75,9 @@
                 BorderThickness="2.5" BorderBrush="Black" IsEnabled="False"/>
         </StackPanel>
 
-        <ScrollViewer Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+        <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                
+
                 <TextBlock Text="Mejor solución:" FontWeight="DemiBold" FontSize="15" Margin="5" VerticalAlignment="Center"/>
                 <TextBox x:Name="tBoxSolución" Text="Por encontrar" IsReadOnly="True" VerticalAlignment="Center" FontSize="15"/>
 
@@ -87,8 +85,5 @@
                 <TextBox x:Name="tBoxGen" Text="0" IsReadOnly="True" VerticalAlignment="Center" FontSize="15"/>
             </StackPanel>
         </ScrollViewer>
-
-        <ListBox x:Name="LB1" Grid.Column="2"/>
-        <ListBox x:Name="LB2" Grid.Column="3"/>
     </Grid>
 </Window>

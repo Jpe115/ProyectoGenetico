@@ -331,13 +331,11 @@ namespace ProyectoGenetico
                     }
                     else
                     {
-                        MostrarRutasPob(Población2, LB1, 50, cantidadPuntos);
                         if (ProcesoMutación(Población2))
                         {                           
                             CalcularAptitud(Población2);
                             BuscarMejorSolución(Población2);
                             esPob1Actual = !esPob1Actual;
-                            MostrarRutasPob(Población2, LB2, 50, cantidadPuntos);
                         }
                     }
                 });             
