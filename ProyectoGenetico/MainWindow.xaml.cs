@@ -26,6 +26,12 @@ namespace ProyectoGenetico
         OPX
     }
     
+    enum TipoMutación
+    {
+        Swap,
+        Switch2
+    }
+
     public partial class MainWindow : Window
     {
         private List<(int, int)> coordenadas = new List<(int, int)>();
