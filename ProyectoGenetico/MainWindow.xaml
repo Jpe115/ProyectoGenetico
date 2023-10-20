@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProyectoGenetico"
         mc:Ignorable="d"
-        Title="Proyecto genético" Height="630" Width="1100">
+        Title="Proyecto genético" Height="650" Width="1100">
 
     <Window.Resources>
     <Style x:Key="Btn" TargetType="Button">
@@ -51,7 +51,11 @@
             <TextBlock Text="Probabilidad de cruzamiento:" TextWrapping="WrapWithOverflow" FontSize="14" Margin="7,4,7,4"/>
             <TextBox x:Name="ProbCruzamiento" Text="90" BorderThickness="2" FontSize="16" Margin="7,3"/>
 
-            <TextBlock Text="Mutación: Swap" FontWeight="SemiBold" TextWrapping="WrapWithOverflow" FontSize="14" Margin="7,4,7,0"/>
+            <TextBlock Text="Mutación:" FontWeight="SemiBold" TextWrapping="WrapWithOverflow" FontSize="14" Margin="7,4,7,0"/>
+            <ComboBox x:Name="MutaciónElegida" Margin="15,3" SelectedIndex="0">
+                <ComboBoxItem Content="Swap"/>
+                <ComboBoxItem Content="Switch2"/>
+            </ComboBox>
             <TextBlock Text="Probabilidad de mutación:" TextWrapping="WrapWithOverflow" FontSize="14" Margin="7,4,7,4"/>
             <TextBox x:Name="ProbMutación" Text="20" BorderThickness="2" FontSize="16" Margin="7,3"/>
 

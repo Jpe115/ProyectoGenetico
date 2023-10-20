@@ -42,6 +42,7 @@ namespace ProyectoGenetico
         private int probCruzamiento;
         private int probMutación;
         private bool seHizoCruzamiento = false;
+        private bool seHizoMutación = false;
         private int nCiclos;
         private int ciclo;
         private bool esPob1Actual = true;
