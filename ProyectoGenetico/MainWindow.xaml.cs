@@ -47,8 +47,6 @@ namespace ProyectoGenetico
         private string mejor = "";
         private int probCruzamiento;
         private int probMutación;
-        private bool seHizoCruzamiento = false;
-        private bool seHizoMutación = false;
         private int nCiclos;
         private int ciclo;
         private bool esPob1Actual = true;
@@ -59,6 +57,7 @@ namespace ProyectoGenetico
         private int cantPoblaciónActual;
         private bool cantPoblaciónCambió;
         private TipoCruzamiento cruzamiento;
+        private TipoMutación mutación;
 
         private Dictionary<int, int> poblacionesChicas = new Dictionary<int, int> {
             { 1, 1 },
@@ -169,7 +168,6 @@ namespace ProyectoGenetico
             canvas.IsEnabled = false;
             btnEjecutar.IsEnabled = false;
             btnCancelar.IsEnabled = true;
-            seHizoCruzamiento = false;
             ciclo = 0;
 
             if (seAñadióPunto)
@@ -246,6 +244,15 @@ namespace ProyectoGenetico
             {
                 cruzamiento = TipoCruzamiento.OPX;
             }
+
+            if (MutaciónElegida.SelectedIndex == 0)
+            {
+                mutación = TipoMutación.Swap;
+            }
+            else
+            {
+                mutación = TipoMutación.Switch2;
+            }
             #endregion
 
             if (ejecucionesRepetidas == 0)
@@ -291,8 +298,7 @@ namespace ProyectoGenetico
                     //pobContraria es la población de salida o donde se guarda lo más nuevo
                     if (esPob1Actual)
                     {
-                        ProcesoCruzamiento(Población, Población2);
-                        if (seHizoCruzamiento)
+                        if (ProcesoCruzamiento(Población, Población2))
                         {
                             CalcularAptitud(Población2);
                             BuscarMejorSolución(Población2);
@@ -301,39 +307,33 @@ namespace ProyectoGenetico
                     }
                     else
                     {
-                        ProcesoCruzamiento(Población2, Población);
-                        if (seHizoCruzamiento)
+                        if (ProcesoCruzamiento(Población2, Población))
                         {
                             CalcularAptitud(Población);
                             BuscarMejorSolución(Población);
                             esPob1Actual = !esPob1Actual;
                         }
-                    }                                       
-                });
+                    }
 
-                if (ProcesoMutación())
-                {
                     if (esPob1Actual)
                     {
-                        await Task.Run(() =>
-                        {                       
-                            MutaciónSwap(Población);
+                        if (ProcesoMutación(Población))
+                        {
                             CalcularAptitud(Población);
                             BuscarMejorSolución(Población);
                             esPob1Actual = !esPob1Actual;
-                        });
+                        }                                                
                     }
                     else
                     {
-                        await Task.Run(() =>
-                        {                            
-                            MutaciónSwap(Población2);
+                        if (ProcesoMutación(Población2))
+                        {
                             CalcularAptitud(Población2);
                             BuscarMejorSolución(Población2);
                             esPob1Actual = !esPob1Actual;
-                        });
+                        }
                     }
-                }                
+                });             
 
                 //Cambios al canvas
                 if(ciclo % 10 == 0)
@@ -477,7 +477,7 @@ namespace ProyectoGenetico
 #endregion
 
         #region Cruzamiento
-        private void ProcesoCruzamiento(int[,] pobContraria, int[,] pob)
+        private bool ProcesoCruzamiento(int[,] pobContraria, int[,] pob)
         {
             if (probCruzamiento >= 0 && probCruzamiento <= 100)
             {
@@ -489,24 +489,24 @@ namespace ProyectoGenetico
                         int[] valoresS1yS2 = ObtenerS1yS2();
                         TwoPointCrossover(true, 1, valoresS1yS2, pob, pobContraria);
                         TwoPointCrossover(false, -1, valoresS1yS2, pob, pobContraria);
-                        seHizoCruzamiento = true;
+                        return true;
                     }
                     else
                     {
                         int S1 = rand.Next(3, cantidadPuntos - 3);
                         OnePointCrossover(true, 1, S1, pob, pobContraria);
                         OnePointCrossover(false, -1, S1, pob, pobContraria);
-                        seHizoCruzamiento = true;
+                        return true;
                     }
                 }
                 else
                 {
-                    seHizoCruzamiento = false;
+                    return false;
                 }
             }
             else
             {
-                seHizoCruzamiento = false;
+                return false;
             }
         }
 
@@ -643,14 +643,27 @@ namespace ProyectoGenetico
         #endregion
 
         #region Mutación
-        private bool ProcesoMutación()
+        private bool ProcesoMutación(int[,] pob)
         {
             if (probMutación >= 1 && probMutación <= 100)
             {
                 int probabilidad = rand.Next(1, 100);
                 if (probabilidad <= probMutación)
                 {
-                    return true;
+                    if (mutación == TipoMutación.Swap)
+                    {
+                        MutaciónSwap(pob);
+                        return true;
+                    }
+                    else
+                    {
+
+                        return true;
+                    }
+                }
+                else
+                {
+                    return false;
                 }
             }
             return false;
