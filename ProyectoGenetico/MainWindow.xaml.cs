@@ -58,6 +58,7 @@ namespace ProyectoGenetico
         private bool cantPoblaciónCambió;
         private TipoCruzamiento cruzamiento;
         private TipoMutación mutación;
+        private int cantidadDePuntosEntre2;
 
         private Dictionary<int, int> poblacionesChicas = new Dictionary<int, int> {
             { 1, 1 },
@@ -253,6 +254,9 @@ namespace ProyectoGenetico
             {
                 mutación = TipoMutación.Switch2;
             }
+
+            //Redondear en caso de ser necesario para la mutación switch2
+            cantidadDePuntosEntre2 = (int)Math.Ceiling((double)cantidadPuntos / 2);
             #endregion
 
             if (ejecucionesRepetidas == 0)
@@ -657,7 +661,7 @@ namespace ProyectoGenetico
                     }
                     else
                     {
-
+                        MutaciónSwitch2(pob);
                         return true;
                     }
                 }
@@ -679,6 +683,17 @@ namespace ProyectoGenetico
                 pob[fila, N1yN2[1]] = pob[fila, N1yN2[0]];
                 pob[fila, N1yN2[0]] = aux;         
             }           
+        }
+
+        private void MutaciónSwitch2(int[,] pob)
+        {
+            int punto = rand.Next(1, cantidadPuntos / 2);
+            for (int fila = 0; fila < cantPoblación; fila++)
+            {
+                int aux = pob[fila, punto];
+                pob[fila, punto] = pob[fila, punto + cantidadDePuntosEntre2];
+                pob[fila, punto + cantidadDePuntosEntre2] = aux;
+            }
         }
         #endregion
 
