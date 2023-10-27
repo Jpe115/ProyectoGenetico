@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+//using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,6 +16,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Newtonsoft.Json;
 
 namespace ProyectoGenetico
 {
@@ -367,6 +370,7 @@ namespace ProyectoGenetico
             btnCancelar.IsEnabled = false;
             seAñadióPunto = false;
             Cursor = Cursors.Arrow;
+            await GuardarPuntos(coordenadas);
         }
 
         private void ObtenerDistancias()
@@ -830,6 +834,49 @@ namespace ProyectoGenetico
             cantidadPuntos = 0;
             coordenadas.Clear();
             btnReiniciar.IsEnabled = false;
+        }
+
+        private async Task GuardarPuntos(List<(int, int)> coordenadas)
+        {
+            string nombreArchivo = "CoordenadasGuardadas.json";
+            string json = JsonConvert.SerializeObject(coordenadas);
+            await File.WriteAllTextAsync(nombreArchivo, json);
+        }
+
+        private async Task LeerPuntos()
+        {
+            string nombreArchivo = "CoordenadasGuardadas.json";
+            try
+            {
+                if (File.Exists(nombreArchivo))
+                {
+                    string json = await File.ReadAllTextAsync(nombreArchivo);
+                    List<(int, int)>? listaCoordenadas = JsonConvert.DeserializeObject<List<(int, int)>>(json);
+
+                    if (listaCoordenadas != null)
+                    {
+                        var respuesta = MessageBox.Show("Se ha encontrado una lista de ciudades de una ejecución anterior, ¿Desea usarla?",
+                            "Advertencia", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                        if (respuesta == MessageBoxResult.Yes)
+                        {
+                            coordenadas = listaCoordenadas;
+                            RedibujarPuntos();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            await LeerPuntos();
+            //string ub = Directory.GetCurrentDirectory();
+            //MessageBox.Show(ub);
         }
     }
 }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProyectoGenetico"
         mc:Ignorable="d"
-        Title="Proyecto genético" Height="650" Width="1100">
+        Title="Proyecto genético" Height="650" Width="1100" WindowStyle="ThreeDBorderWindow" Loaded="Window_Loaded">
 
     <Window.Resources>
     <Style x:Key="Btn" TargetType="Button">
