@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-//using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -62,15 +61,6 @@ namespace ProyectoGenetico
         private TipoCruzamiento cruzamiento;
         private TipoMutación mutación;
         private int cantidadDePuntosEntre2;
-
-        private Dictionary<int, int> poblacionesChicas = new Dictionary<int, int> {
-            { 1, 1 },
-            { 2, 1 },
-            { 3, 1 },
-            { 4, 6 },
-            { 5, 24 },
-            { 6, 60 },
-        };
 
         public int CantPoblación { get => cantPoblación ; set { 
                 if (value >= 10 && value <= 2000) {
@@ -166,19 +156,13 @@ namespace ProyectoGenetico
         }
 
         private async void Ejecutar(object sender, RoutedEventArgs e)
-        {
-            DateTime antes = DateTime.Now;
+        {            
             Cursor = Cursors.Wait;
             canvas.IsEnabled = false;
             btnEjecutar.IsEnabled = false;
             btnCancelar.IsEnabled = true;
             ciclo = 0;
-
-            if (seAñadióPunto)
-            {
-                await Task.Run(ObtenerDistancias);                
-            }
-
+            
             #region Obtención de variables del usuario
             //elegir cantidad de población para cuando son menos de 7 ciudades
             // y establecer 100 de población por default
@@ -192,10 +176,7 @@ namespace ProyectoGenetico
                 MessageBox.Show(ex.Message, "Cantidad fuera de rango", MessageBoxButton.OK, MessageBoxImage.Warning);
                 nPoblacion.Text = 500.ToString();
             }
-            if (cantidadPuntos < 7)
-            {
-                cantPoblación = poblacionesChicas[cantidadPuntos];
-            }
+
             //Comprobar si el usuario cambió la cantidad de la población
             if (cantPoblaciónActual != CantPoblación)
             {
@@ -262,6 +243,13 @@ namespace ProyectoGenetico
             cantidadDePuntosEntre2 = (int)Math.Ceiling((double)cantidadPuntos / 2);
             cantidadDePuntosEntre2--;
             #endregion
+
+            DateTime antes = DateTime.Now;
+
+            if (seAñadióPunto)
+            {
+                await Task.Run(ObtenerDistancias);
+            }
 
             if (ejecucionesRepetidas == 0)
             {                
@@ -360,11 +348,11 @@ namespace ProyectoGenetico
                 ciclo++;
                 tBoxGen.Text = ciclo.ToString();
             } while (ciclo < nCiclos);
-            
-            ejecucionesRepetidas++;
+                        
             DateTime después = DateTime.Now;
             TimeSpan total = después - antes;
             Tiempo.Text = total.ToString();
+            ejecucionesRepetidas++;
             canvas.IsEnabled = true;
             btnEjecutar.IsEnabled = true;
             btnCancelar.IsEnabled = false;
@@ -890,5 +878,10 @@ namespace ProyectoGenetico
             //MessageBox.Show(ub);
         }
         #endregion
+
+        private async Task GuardarDatosExcel(int aptitud)
+        {
+
+        }
     }
 }
