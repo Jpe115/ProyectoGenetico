@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Newtonsoft.Json;
+using OfficeOpenXml;
 
 namespace ProyectoGenetico
 {
@@ -114,7 +115,8 @@ namespace ProyectoGenetico
 
         public MainWindow()
         {
-            InitializeComponent();            
+            InitializeComponent();
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         }
 
         private void Canvas_PintarPunto(object sender, MouseButtonEventArgs e)
@@ -359,6 +361,7 @@ namespace ProyectoGenetico
             seAñadióPunto = false;
             Cursor = Cursors.Arrow;
             await GuardarPuntos(coordenadas);
+            await GuardarDatosExcel(1, "a");
         }
 
         private void ObtenerDistancias()
@@ -822,6 +825,7 @@ namespace ProyectoGenetico
             cantidadPuntos = 0;
             coordenadas.Clear();
             btnReiniciar.IsEnabled = false;
+            primerPunto = true;
         }
 
         #region ListaPasada
@@ -879,9 +883,17 @@ namespace ProyectoGenetico
         }
         #endregion
 
-        private async Task GuardarDatosExcel(int aptitud)
+        private async Task GuardarDatosExcel(int aptitud, string tiempo)
         {
+            string rutaArchivo = "D:\\Escuela\\7 Semestre\\Algoritmos metaheuristicos\\Experimento_AG.xlsx";
 
+            using (var package = new ExcelPackage(new FileInfo(rutaArchivo)))
+            {
+                var worksheet = package.Workbook.Worksheets[0];
+                worksheet.Cells[5, 7].Value = "asdfg";
+
+                await package.SaveAsync();
+            }
         }
     }
 }
