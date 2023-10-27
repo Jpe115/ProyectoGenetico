@@ -843,7 +843,7 @@ namespace ProyectoGenetico
             await File.WriteAllTextAsync(nombreArchivo, json);
         }
 
-        private async Task LeerPuntos()
+        private async Task<bool> LeerPuntos()
         {
             string nombreArchivo = "CoordenadasGuardadas.json";
             try
@@ -861,20 +861,30 @@ namespace ProyectoGenetico
                         {
                             coordenadas = listaCoordenadas;
                             RedibujarPuntos();
+                            return true;
                         }
                     }
                 }
+                return false;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                return false;
             }
         }
 
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            await LeerPuntos();
+            bool lecturaHecha = await LeerPuntos();
+            if (lecturaHecha)
+            {
+                btnEjecutar.IsEnabled = true;
+                btnReiniciar.IsEnabled = true;
+                seAñadióPunto = true;
+                primerPunto = false;
+            }
             //string ub = Directory.GetCurrentDirectory();
             //MessageBox.Show(ub);
         }
