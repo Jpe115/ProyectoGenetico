@@ -836,6 +836,7 @@ namespace ProyectoGenetico
             btnReiniciar.IsEnabled = false;
         }
 
+        #region ListaPasada
         private async Task GuardarPuntos(List<(int, int)> coordenadas)
         {
             string nombreArchivo = "CoordenadasGuardadas.json";
@@ -888,5 +889,6 @@ namespace ProyectoGenetico
             //string ub = Directory.GetCurrentDirectory();
             //MessageBox.Show(ub);
         }
+        #endregion
     }
 }
