@@ -351,7 +351,7 @@ namespace ProyectoGenetico
                         
             DateTime después = DateTime.Now;
             TimeSpan total = después - antes;
-            Tiempo.Text = total.ToString();
+            Tiempo.Text = total.TotalSeconds.ToString();
             ejecucionesRepetidas++;
             canvas.IsEnabled = true;
             btnEjecutar.IsEnabled = true;
