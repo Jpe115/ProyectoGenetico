@@ -32,7 +32,7 @@ namespace ProyectoGenetico
     enum TipoMutación
     {
         Swap,
-        Switch2
+        HSwap
     }
 
     public partial class MainWindow : Window
@@ -238,7 +238,7 @@ namespace ProyectoGenetico
             }
             else
             {
-                mutación = TipoMutación.Switch2;
+                mutación = TipoMutación.HSwap;
             }
 
             //Redondear en caso de ser necesario para la mutación switch2
@@ -657,7 +657,7 @@ namespace ProyectoGenetico
                     }
                     else
                     {
-                        MutaciónSwitch2(pob);
+                        MutaciónHSwap(pob);
                         return true;
                     }
                 }
@@ -681,7 +681,7 @@ namespace ProyectoGenetico
             }           
         }
 
-        private void MutaciónSwitch2(int[,] pob)
+        private void MutaciónHSwap(int[,] pob)
         {           
             for (int fila = 0; fila < cantPoblación; fila++)
             {
@@ -890,7 +890,7 @@ namespace ProyectoGenetico
             using (var package = new ExcelPackage(new FileInfo(rutaArchivo)))
             {
                 var worksheet = package.Workbook.Worksheets[0];
-                worksheet.Cells[5, 7].Value = "asdfg";
+                worksheet.Cells[7, 7].Value = "asdfg";
 
                 await package.SaveAsync();
             }
