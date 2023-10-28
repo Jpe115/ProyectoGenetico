@@ -671,7 +671,7 @@ namespace ProyectoGenetico
                         return true;
                     }else if (mutación == TipoMutación.Switch)
                     {
-
+                        MutaciónSwitch(pob);
                         return true;
                     }
                     else
