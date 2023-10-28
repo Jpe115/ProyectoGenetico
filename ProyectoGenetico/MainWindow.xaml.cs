@@ -676,7 +676,7 @@ namespace ProyectoGenetico
                     }
                     else
                     {
-
+                        MutaciónInsert(pob);
                         return true;
                     }
                 }
@@ -724,7 +724,17 @@ namespace ProyectoGenetico
 
         private void MutaciónInsert(int[,] pob)
         {
+            for (int fila = 0; fila < cantPoblación; fila++)
+            {
+                int[] N1yN2 = ObtenerS1yS2();
+                int aux = pob[fila, N1yN2[0]];
+                pob[fila, N1yN2[1]] = aux;
 
+                for(int columna = N1yN2[0]; columna < N1yN2[1]; columna++)
+                {
+                    pob[fila, columna] = pob[fila, columna + 1];
+                }
+            }
         }
         #endregion
 
