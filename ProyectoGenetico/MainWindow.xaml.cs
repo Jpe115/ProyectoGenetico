@@ -710,6 +710,22 @@ namespace ProyectoGenetico
                 pob[fila, punto + cantidadDePuntosEntre2] = aux;
             }
         }
+
+        private void MutaciónSwitch(int[,] pob)
+        {
+            for (int fila = 0; fila < cantPoblación; fila++)
+            {
+                int punto = rand.Next(1, cantidadPuntos - 2);
+                int aux = pob[fila, punto];
+                pob[fila, punto] = pob[fila, punto + 1];
+                pob[fila, punto + 1] = aux;
+            }
+        }
+
+        private void MutaciónInsert(int[,] pob)
+        {
+
+        }
         #endregion
 
         #region Interfaz
