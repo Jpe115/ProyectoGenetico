@@ -32,7 +32,9 @@ namespace ProyectoGenetico
     enum TipoMutación
     {
         Swap,
-        HSwap
+        HSwap,
+        Switch,
+        Insert
     }
 
     public partial class MainWindow : Window
@@ -236,9 +238,17 @@ namespace ProyectoGenetico
             {
                 mutación = TipoMutación.Swap;
             }
-            else
+            else if (MutaciónElegida.SelectedIndex == 1)
             {
                 mutación = TipoMutación.HSwap;
+            }
+            else if (MutaciónElegida.SelectedIndex == 2)
+            {
+                mutación = TipoMutación.Switch;
+            }
+            else
+            {
+                mutación = TipoMutación.Insert;
             }
 
             //Redondear en caso de ser necesario para la mutación switch2
@@ -655,9 +665,18 @@ namespace ProyectoGenetico
                         MutaciónSwap(pob);
                         return true;
                     }
-                    else
+                    else if (mutación == TipoMutación.HSwap)
                     {
                         MutaciónHSwap(pob);
+                        return true;
+                    }else if (mutación == TipoMutación.Switch)
+                    {
+
+                        return true;
+                    }
+                    else
+                    {
+
                         return true;
                     }
                 }
