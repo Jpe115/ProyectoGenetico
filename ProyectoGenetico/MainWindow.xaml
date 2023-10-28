@@ -54,7 +54,9 @@
             <TextBlock Text="Mutación:" FontWeight="SemiBold" TextWrapping="WrapWithOverflow" FontSize="14" Margin="7,4,7,0"/>
             <ComboBox x:Name="MutaciónElegida" Margin="15,3" SelectedIndex="0">
                 <ComboBoxItem Content="Swap"/>
-                <ComboBoxItem Content="Halves swap"/>
+                <ComboBoxItem Content="Halves Swap"/>
+                <ComboBoxItem Content="Switch"/>
+                <ComboBoxItem Content="Insert"/>
             </ComboBox>
             <TextBlock Text="Probabilidad de mutación:" TextWrapping="WrapWithOverflow" FontSize="14" Margin="7,4,7,4"/>
             <TextBox x:Name="ProbMutación" Text="20" BorderThickness="2" FontSize="16" Margin="7,3"/>
