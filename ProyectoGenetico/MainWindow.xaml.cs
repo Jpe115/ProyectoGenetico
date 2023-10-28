@@ -369,9 +369,17 @@ namespace ProyectoGenetico
             btnEjecutar.IsEnabled = true;
             btnCancelar.IsEnabled = false;
             seAñadióPunto = false;
+
+            LS1.Items.Clear();
+            LS2.Items.Clear();
+            await Task.Run(() =>
+            {
+                MostrarRutasPob(Población, LS1, 100, cantidadPuntos);
+                MostrarRutasPob(Población2, LS2, 100, cantidadPuntos);
+            });
             Cursor = Cursors.Arrow;
-            await GuardarPuntos(coordenadas);
-            await GuardarDatosExcel(1, "a");
+            //await GuardarPuntos(coordenadas);
+            //await GuardarDatosExcel(1, "a");
         }
 
         private void ObtenerDistancias()
@@ -727,13 +735,13 @@ namespace ProyectoGenetico
             for (int fila = 0; fila < cantPoblación; fila++)
             {
                 int[] N1yN2 = ObtenerS1yS2();
-                int aux = pob[fila, N1yN2[0]];
-                pob[fila, N1yN2[1]] = aux;
+                int aux = pob[fila, N1yN2[0]];                
 
                 for(int columna = N1yN2[0]; columna < N1yN2[1]; columna++)
                 {
                     pob[fila, columna] = pob[fila, columna + 1];
                 }
+                pob[fila, N1yN2[1]] = aux;
             }
         }
         #endregion
