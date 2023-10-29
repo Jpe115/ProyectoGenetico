@@ -26,7 +26,10 @@ namespace ProyectoGenetico
     enum TipoCruzamiento
     {
         TPX,
-        OPX
+        OPX,
+        OBX,
+        PPX,
+        OSX
     }
     
     enum TipoMutación
@@ -229,9 +232,21 @@ namespace ProyectoGenetico
             {
                 cruzamiento = TipoCruzamiento.TPX;
             }
-            else
+            else if (CruzamientoElegido.SelectedIndex == 1)
             {
                 cruzamiento = TipoCruzamiento.OPX;
+            }
+            else if (CruzamientoElegido.SelectedIndex == 2)
+            {
+                cruzamiento = TipoCruzamiento.OBX;
+            }
+            else if (CruzamientoElegido.SelectedIndex == 3)
+            {
+                cruzamiento = TipoCruzamiento.PPX;
+            }
+            else
+            {
+                cruzamiento = TipoCruzamiento.OSX;
             }
 
             if (MutaciónElegida.SelectedIndex == 0)
@@ -502,19 +517,31 @@ namespace ProyectoGenetico
                 int prob = rand.Next(1, 100);
                 if (prob <= probCruzamiento)
                 {
-                    if(cruzamiento == TipoCruzamiento.TPX)
+                    if (cruzamiento == TipoCruzamiento.TPX)
                     {
                         int[] valoresS1yS2 = ObtenerS1yS2();
                         TwoPointCrossover(true, 1, valoresS1yS2, pob, pobContraria);
                         TwoPointCrossover(false, -1, valoresS1yS2, pob, pobContraria);
                         return true;
                     }
-                    else
+                    else if (cruzamiento == TipoCruzamiento.OPX)
                     {
                         int S1 = rand.Next(3, cantidadPuntos - 3);
                         OnePointCrossover(true, 1, S1, pob, pobContraria);
                         OnePointCrossover(false, -1, S1, pob, pobContraria);
                         return true;
+                    }
+                    else if (cruzamiento == TipoCruzamiento.OBX)
+                    {
+
+                    }
+                    else if (cruzamiento == TipoCruzamiento.PPX)
+                    {
+
+                    }
+                    else
+                    {
+
                     }
                 }
                 else
