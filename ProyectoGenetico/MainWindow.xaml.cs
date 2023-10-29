@@ -557,6 +557,22 @@ namespace ProyectoGenetico
             }
         }
 
+        private void OrderBaseCrossover()
+        {
+            var máscara = CrearMáscara();
+        }
+
+        private int[] CrearMáscara()
+        {
+            int[] máscara = new int[cantidadPuntos];
+            for (int i = 0; i < cantidadPuntos; i++)
+            {
+                int digito = rand.Next(0, 1);
+                máscara[i] = digito;
+            }
+            return máscara;
+        }
+
         private void OnePointCrossover(bool esPar, int intercambio, int punto, int[,] pob, int[,] pobContraria)
         {
             int parImpar = esPar ? 0 : 1;
