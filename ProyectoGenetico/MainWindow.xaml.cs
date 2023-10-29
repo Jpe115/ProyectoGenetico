@@ -534,14 +534,16 @@ namespace ProyectoGenetico
                     else if (cruzamiento == TipoCruzamiento.OBX)
                     {
 
+                        return true;
                     }
                     else if (cruzamiento == TipoCruzamiento.PPX)
                     {
 
+                        return true;
                     }
                     else
                     {
-
+                        return true;
                     }
                 }
                 else
