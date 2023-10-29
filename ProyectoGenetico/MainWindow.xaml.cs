@@ -557,9 +557,22 @@ namespace ProyectoGenetico
             }
         }
 
-        private void OrderBaseCrossover()
+        private void OrderBaseCrossover(bool esPar, int intercambio, int[,] pob, int[,] pobContraria)
         {
+            int parImpar = esPar ? 0 : 1;
             var máscara = CrearMáscara();
+
+            for (int a = parImpar; a < cantPoblación; a += 2)
+            {
+                for (int b = 0; b < cantidadPuntos; a++)
+                {
+                    if (máscara[b] == 1)
+                    {
+                        pob[a, b + 1] = pobContraria[a, b + 1];
+                    }
+                }
+            }
+            
         }
 
         private int[] CrearMáscara()
