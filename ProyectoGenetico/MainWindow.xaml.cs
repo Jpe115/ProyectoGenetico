@@ -385,13 +385,13 @@ namespace ProyectoGenetico
             btnCancelar.IsEnabled = false;
             seAñadióPunto = false;
 
-            LS1.Items.Clear();
-            LS2.Items.Clear();
-            await Task.Run(() =>
-            {
-                MostrarRutasPob(Población, LS1, 100, cantidadPuntos);
-                MostrarRutasPob(Población2, LS2, 100, cantidadPuntos);
-            });
+            //LS1.Items.Clear();
+            //LS2.Items.Clear();
+            //await Task.Run(() =>
+            //{
+            //    MostrarRutasPob(Población, LS1, 100, cantidadPuntos);
+            //    MostrarRutasPob(Población2, LS2, 100, cantidadPuntos);
+            //});
             Cursor = Cursors.Arrow;
             //await GuardarPuntos(coordenadas);
             //await GuardarDatosExcel(1, "a");
