@@ -566,19 +566,34 @@ namespace ProyectoGenetico
             for (int a = parImpar; a < cantPoblación; a += 2)
             {
                 List<int> dígitosAgregados = new();
-                for (int b = 0; b < cantidadPuntos; b++)
-                {
-                    if (máscara[b] == 1)
-                    {
-                        pob[a, b + 1] = pobContraria[a, b + 1];
-                        dígitosAgregados.Add(pob[a, b + 1]);
-                    }
-                }
                 for (int b = 1; b < cantidadPuntos; b++)
                 {
-                    if (! dígitosAgregados.Contains(pobContraria[a + intercambio, b]))
+                    if (máscara[b - 1] == 1)
                     {
-                        pob[a, b] = pobContraria[a + intercambio, b];
+                        pob[a, b] = pobContraria[a, b];
+                        dígitosAgregados.Add(pob[a, b]);
+                    }
+                }
+
+                int columna = 1;
+                for (int b = 1; b < cantidadPuntos; b++)
+                {
+                    if (máscara[b - 1] == 0)
+                    {
+                        bool bandera = false;
+                        while (bandera == false && columna < cantidadPuntos)
+                        {
+                            if (!dígitosAgregados.Contains(pobContraria[a + intercambio, columna]))
+                            {
+                                pob[a, b] = pobContraria[a + intercambio, columna];
+                                bandera = true;
+                            }
+                            else
+                            {
+                                columna++;
+                            }
+                        }
+                        columna++;    
                     }
                 }
             }
