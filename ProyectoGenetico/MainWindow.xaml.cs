@@ -545,7 +545,9 @@ namespace ProyectoGenetico
                     }
                     else
                     {
-
+                        int[] puntos = ObtenerS1yS2();
+                        OrderSegmentCrossover(true, 1, puntos, pob, pobContraria);
+                        OrderSegmentCrossover(false, -1, puntos, pob, pobContraria);
                         return true;
                     }
                 }
