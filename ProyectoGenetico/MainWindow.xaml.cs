@@ -560,6 +560,65 @@ namespace ProyectoGenetico
             }
         }
 
+        private void OrderSegmentCrossover(bool esPar, int intercambio, int[] puntos, int[,] pob, int[,] pobContraria)
+        {
+            int parImpar = esPar ? 0 : 1;
+
+            for (int a = parImpar; a < cantPoblación; a += 2)
+            {
+                List<int> dígitosAgregados = new();
+                //LLenar desde el padre 1 al hijo
+                for (int b = 1; b <= puntos[0]; b++)
+                {
+                    //Pasar todos los elementos del padre 1 dentro del rango al hijo
+                    pob[a, b] = pobContraria[a, b];
+                    dígitosAgregados.Add(pob[a, b]);
+                }
+
+                //Verificar que no sea duplicado para pasar desde el padre 2             
+                int columna = 1;
+
+                for (int b = puntos[0] + 1; b <= puntos[1]; b++)
+                {
+                    bool bandera = false;
+                    while (bandera == false && columna < cantidadPuntos)
+                    {
+                        if (dígitosAgregados.Contains(pobContraria[a + intercambio, columna]))
+                        {
+                            pob[a, b] = pobContraria[a + intercambio, columna];
+                            dígitosAgregados.Add(pob[a, b]);
+                            bandera = true;
+                        }
+                        else
+                        {
+                            columna++;
+                        }
+                    }
+                    columna++;
+                }
+
+                int columnaPadre1 = puntos[0] + 1;
+                //Pasar los números restantes desde el padre 1
+                for (int b = puntos[1] + 1; b < cantidadPuntos; b++)
+                {
+                    bool bandera = false;
+                    while (bandera == false && columna < cantidadPuntos)
+                    {
+                        if (dígitosAgregados.Contains(pobContraria[a, columnaPadre1]))
+                        {
+                            pob[a, b] = pobContraria[a, columnaPadre1];
+                            bandera = true;
+                        }
+                        else
+                        {
+                            columnaPadre1++;
+                        }
+                    }
+                    columnaPadre1++;
+                }
+            }
+        }
+
         private void PrecedencePreservativeCrossover(bool esPar, int intercambio, int[,] pob, int[,] pobContraria)
         {
             int parImpar = esPar ? 0 : 1;
@@ -610,28 +669,6 @@ namespace ProyectoGenetico
                         columnaPadre2++;                            
                     }
                 }
-
-                
-                //for (int b = 1; b < cantidadPuntos; b++)
-                //{
-                //    if (máscara[b - 1] == 0)
-                //    {
-                //        bool bandera = false;
-                //        while (bandera == false && columna < cantidadPuntos)
-                //        {
-                //            if (!dígitosAgregados.Contains(pobContraria[a + intercambio, columna]))
-                //            {
-                //                pob[a, b] = pobContraria[a + intercambio, columna];
-                //                bandera = true;
-                //            }
-                //            else
-                //            {
-                //                columna++;
-                //            }
-                //        }
-                //        columna++;
-                //    }
-                //}
             }
         }
 
