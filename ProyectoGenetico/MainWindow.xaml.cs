@@ -585,7 +585,7 @@ namespace ProyectoGenetico
                     bool bandera = false;
                     while (bandera == false && columna < cantidadPuntos)
                     {
-                        if (dígitosAgregados.Contains(pobContraria[a + intercambio, columna]))
+                        if (! dígitosAgregados.Contains(pobContraria[a + intercambio, columna]))
                         {
                             pob[a, b] = pobContraria[a + intercambio, columna];
                             dígitosAgregados.Add(pob[a, b]);
@@ -604,9 +604,9 @@ namespace ProyectoGenetico
                 for (int b = puntos[1] + 1; b < cantidadPuntos; b++)
                 {
                     bool bandera = false;
-                    while (bandera == false && columna < cantidadPuntos)
+                    while (bandera == false && columnaPadre1 < cantidadPuntos)
                     {
-                        if (dígitosAgregados.Contains(pobContraria[a, columnaPadre1]))
+                        if (! dígitosAgregados.Contains(pobContraria[a, columnaPadre1]))
                         {
                             pob[a, b] = pobContraria[a, columnaPadre1];
                             bandera = true;
