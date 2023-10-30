@@ -533,7 +533,8 @@ namespace ProyectoGenetico
                     }
                     else if (cruzamiento == TipoCruzamiento.OBX)
                     {
-
+                        OrderBaseCrossover(true, 1, pob, pobContraria);
+                        OrderBaseCrossover(false, -1, pob, pobContraria);
                         return true;
                     }
                     else if (cruzamiento == TipoCruzamiento.PPX)
@@ -564,11 +565,20 @@ namespace ProyectoGenetico
 
             for (int a = parImpar; a < cantPoblación; a += 2)
             {
+                List<int> dígitosAgregados = new();
                 for (int b = 0; b < cantidadPuntos; a++)
                 {
                     if (máscara[b] == 1)
                     {
                         pob[a, b + 1] = pobContraria[a, b + 1];
+                        dígitosAgregados.Add(pob[a, b + 1]);
+                    }
+                }
+                for (int b = 1; b < cantidadPuntos; a++)
+                {
+                    if (! dígitosAgregados.Contains(pobContraria[a + intercambio, b]))
+                    {
+                        pob[a + intercambio, b] = pobContraria[a, b];
                     }
                 }
             }
