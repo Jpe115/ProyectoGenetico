@@ -539,11 +539,13 @@ namespace ProyectoGenetico
                     }
                     else if (cruzamiento == TipoCruzamiento.PPX)
                     {
-
+                        PrecedencePreservativeCrossover(true, 1, pob, pobContraria);
+                        PrecedencePreservativeCrossover(false, -1, pob, pobContraria);
                         return true;
                     }
                     else
                     {
+
                         return true;
                     }
                 }
@@ -555,6 +557,81 @@ namespace ProyectoGenetico
             else
             {
                 return false;
+            }
+        }
+
+        private void PrecedencePreservativeCrossover(bool esPar, int intercambio, int[,] pob, int[,] pobContraria)
+        {
+            int parImpar = esPar ? 0 : 1;
+            var máscara = CrearMáscara();
+
+            for (int a = parImpar; a < cantPoblación; a += 2)
+            {
+                List<int> dígitosAgregados = new();
+                int columnaPadre1 = 1;
+                int columnaPadre2 = 1;
+
+                for (int b = 1; b < cantidadPuntos; b++)
+                {                    
+                    if (máscara[b - 1] == 1)
+                    {
+                        bool bandera = false;
+                        while (bandera == false && columnaPadre1 < cantidadPuntos)
+                        {
+                            if (!dígitosAgregados.Contains(pobContraria[a, columnaPadre1]))
+                            {
+                                pob[a, b] = pobContraria[a, columnaPadre1];
+                                dígitosAgregados.Add(pob[a, b]);
+                                bandera = true;
+                            }
+                            else
+                            {
+                                columnaPadre1++;
+                            }                           
+                        }
+                        columnaPadre1++;                            
+                    }
+                    else
+                    {
+                        bool bandera = false;
+                        while (bandera == false && columnaPadre2 < cantidadPuntos)
+                        {
+                            if (!dígitosAgregados.Contains(pobContraria[a + intercambio, columnaPadre2]))
+                            {
+                                pob[a, b] = pobContraria[a + intercambio, columnaPadre2];
+                                dígitosAgregados.Add(pob[a, b]);
+                                bandera = true;
+                            }
+                            else
+                            {
+                                columnaPadre2++;
+                            }
+                        }
+                        columnaPadre2++;                            
+                    }
+                }
+
+                
+                //for (int b = 1; b < cantidadPuntos; b++)
+                //{
+                //    if (máscara[b - 1] == 0)
+                //    {
+                //        bool bandera = false;
+                //        while (bandera == false && columna < cantidadPuntos)
+                //        {
+                //            if (!dígitosAgregados.Contains(pobContraria[a + intercambio, columna]))
+                //            {
+                //                pob[a, b] = pobContraria[a + intercambio, columna];
+                //                bandera = true;
+                //            }
+                //            else
+                //            {
+                //                columna++;
+                //            }
+                //        }
+                //        columna++;
+                //    }
+                //}
             }
         }
 
@@ -596,8 +673,7 @@ namespace ProyectoGenetico
                         columna++;    
                     }
                 }
-            }
-            
+            } 
         }
 
         private int[] CrearMáscara()
