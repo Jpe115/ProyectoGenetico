@@ -51,6 +51,7 @@
                 <ComboBoxItem Content="OPX"/>
                 <ComboBoxItem Content="OBX"/>
                 <ComboBoxItem Content="PPX"/>
+                <ComboBoxItem Content="OSX"/>
             </ComboBox>
             <TextBlock Text="Probabilidad de cruzamiento:" TextWrapping="WrapWithOverflow" FontSize="14" Margin="7,4,7,4"/>
             <TextBox x:Name="ProbCruzamiento" Text="90" BorderThickness="2" FontSize="16" Margin="7,3"/>
