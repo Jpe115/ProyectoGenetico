@@ -163,13 +163,13 @@ namespace ProyectoGenetico
         }
 
         private async void Ejecutar(object sender, RoutedEventArgs e)
-        {            
+        {
             Cursor = Cursors.Wait;
             canvas.IsEnabled = false;
             btnEjecutar.IsEnabled = false;
             btnCancelar.IsEnabled = true;
             ciclo = 0;
-            
+
             #region Obtención de variables del usuario
             //elegir cantidad de población para cuando son menos de 7 ciudades
             // y establecer 100 de población por default
@@ -228,7 +228,7 @@ namespace ProyectoGenetico
                 Ciclos.Text = 100.ToString();
             }
 
-            if(CruzamientoElegido.SelectedIndex == 0)
+            if (CruzamientoElegido.SelectedIndex == 0)
             {
                 cruzamiento = TipoCruzamiento.TPX;
             }
@@ -279,12 +279,12 @@ namespace ProyectoGenetico
             }
 
             if (ejecucionesRepetidas == 0)
-            {                
+            {
                 mejorSolucionGlobal = new int[cantidadPuntos + 2];
                 mejorSolucionGlobal[cantidadPuntos + 1] = 999999999;
                 //intentosSinMejora = Math.Pow(cantidadPuntos, 2) * 0.33;
             }
-            
+
             if (cantPoblaciónCambió || seAñadióPunto)
             {
                 Población = new int[cantPoblación, cantidadPuntos + 2];
@@ -299,7 +299,7 @@ namespace ProyectoGenetico
                     GenerarPobInicial(Población2);
                     CalcularAptitud(Población2);
                 });
-            }            
+            }
 
             do
             {
@@ -345,21 +345,21 @@ namespace ProyectoGenetico
                             CalcularAptitud(Población);
                             BuscarMejorSolución(Población);
                             esPob1Actual = !esPob1Actual;
-                        }                                                
+                        }
                     }
                     else
                     {
                         if (ProcesoMutación(Población2))
-                        {                           
+                        {
                             CalcularAptitud(Población2);
                             BuscarMejorSolución(Población2);
                             esPob1Actual = !esPob1Actual;
                         }
                     }
-                });             
+                });
 
                 //Cambios al canvas
-                if(ciclo % 10 == 0)
+                if (ciclo % 10 == 0)
                 {
                     canvas.Children.Clear();
                     Thread th1 = new Thread(() =>
@@ -370,15 +370,16 @@ namespace ProyectoGenetico
                     th1.Start();
                     Thread th2 = new Thread(MostrarMejor);
                     th2.Start();
-                }                
+                }
 
                 ciclo++;
                 tBoxGen.Text = ciclo.ToString();
             } while (ciclo < nCiclos);
-                        
+
             DateTime después = DateTime.Now;
             TimeSpan total = después - antes;
-            Tiempo.Text = total.TotalSeconds.ToString();
+            Tiempo.Text = total.TotalSeconds.ToString(); 
+            string taim = total.TotalSeconds.ToString();
             ejecucionesRepetidas++;
             canvas.IsEnabled = true;
             btnEjecutar.IsEnabled = true;
@@ -394,7 +395,8 @@ namespace ProyectoGenetico
             //});
             Cursor = Cursors.Arrow;
             //await GuardarPuntos(coordenadas);
-            //await GuardarDatosExcel(1, "a");
+            //await GuardarDatosExcel(mejorSolucionGlobal[cantidadPuntos + 1], taim, 3, a);
+            //a++;
         }
 
         private void ObtenerDistancias()
@@ -795,66 +797,44 @@ namespace ProyectoGenetico
 
         private void TwoPointCrossover(bool esPar, int intercambio, int[] valoresS1yS2, int[,] pob, int[,] pobContraria)
         {
-            int parImpar = esPar ? 0 : 1;         
+            int parImpar = esPar ? 0 : 1;
 
             //LLenar desde el padre 1 al hijo
             for (int a = parImpar; a < cantPoblación; a += 2)
             {
+                List<int> dígitosAgregados = new();
                 //LLenar desde el padre 1 al hijo
                 for (int b = 1; b < cantidadPuntos + 2; b++)
                 {
                     if (b <= valoresS1yS2[0] || b >= valoresS1yS2[1])
                     {
                         //Pasar todos los elementos del padre 1 dentro de los rangos, al hijo
-                        pob[a, b] = pobContraria[a, b];                                             
-                    }                   
+                        pob[a, b] = pobContraria[a, b];
+                        dígitosAgregados.Add(pob[a, b]);
+                    }
                 }
 
                 //Verificar que no sea duplicado                
-                int fila = a + intercambio;
                 int columna = 1;
 
-                for(int b = 2; b < cantidadPuntos; b++)
+                for (int b = valoresS1yS2[0] + 1; b < valoresS1yS2[1]; b++)
                 {
-                    if ( !(b <= valoresS1yS2[0] || b >= valoresS1yS2[1]) )
+                    bool bandera = false;
+                    while (bandera == false && columna < cantidadPuntos)
                     {
-                        bool bandera = false;
-                        while (bandera == false && columna < cantidadPuntos)
+                        if (!dígitosAgregados.Contains(pobContraria[a + intercambio, columna]))
                         {
-                            int valorActual = pobContraria[fila, columna];
-
-                            if (!EsDuplicado(a, valorActual, valoresS1yS2, pobContraria))
-                            {
-                                pob[a, b] = valorActual;
-                                bandera = true;
-                            }
-                            else
-                            {
-                                columna++;
-                            }
+                            pob[a, b] = pobContraria[a + intercambio, columna];
+                            bandera = true;
                         }
-                        columna++;
+                        else
+                        {
+                            columna++;
+                        }
                     }
-                }                
-            }           
-        }
-
-        private bool EsDuplicado(int a, int valor, int[] valoresS1yS2, int[,] pobContraria)
-        {
-            for (int col = 1; col < cantidadPuntos; col++)
-            {
-                if (pobContraria[a, col] != 0)
-                {
-                    if (col <= valoresS1yS2[0] || col >= valoresS1yS2[1])
-                    {
-                        if (pobContraria[a, col] == valor)
-                        {
-                            return true;
-                        }
-                    }                        
+                    columna++;
                 }
             }
-            return false;
         }
         #endregion
 
@@ -1134,14 +1114,17 @@ namespace ProyectoGenetico
         }
         #endregion
 
-        private async Task GuardarDatosExcel(int aptitud, string tiempo)
+        private async Task GuardarDatosExcel(int aptitud, string tiempo, int f, int c)
         {
-            string rutaArchivo = "D:\\Escuela\\7 Semestre\\Algoritmos metaheuristicos\\Experimento_AG.xlsx";
+            string rutaArchivo = "D:\\Escuela\\7 Semestre\\Algoritmos metaheuristicos\\Exps.xlsx";
 
             using (var package = new ExcelPackage(new FileInfo(rutaArchivo)))
             {
-                var worksheet = package.Workbook.Worksheets[0];
-                worksheet.Cells[7, 7].Value = "asdfg";
+                var worksheetAptitud = package.Workbook.Worksheets[0];
+                worksheetAptitud.Cells[f, c].Value = aptitud;
+
+                var worksheetTiempo = package.Workbook.Worksheets[1];
+                worksheetTiempo.Cells[f, c].Value = tiempo;
 
                 await package.SaveAsync();
             }
