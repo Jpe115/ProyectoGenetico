@@ -735,55 +735,36 @@ namespace ProyectoGenetico
             //LLenar desde el padre 1 al hijo
             for (int a = parImpar; a < cantPoblación; a += 2)
             {
+                List<int> dígitosAgregados = new();
                 //LLenar desde el padre 1 al hijo
                 for (int b = 1; b <= punto; b++)
                 {
                     //Pasar todos los elementos del padre 1 dentro de los rangos, al hijo
                     pob[a, b] = pobContraria[a, b];
+                    dígitosAgregados.Add(pob[a, b]);
                 }
 
                 //Verificar que no sea duplicado                
-                int fila = a + intercambio;
                 int columna = 1;
 
-                for (int b = 2; b < cantidadPuntos; b++)
+                for (int b = punto + 1; b < cantidadPuntos; b++)
                 {
-                    if (!(b <= punto))
+                    bool bandera = false;
+                    while (bandera == false && columna < cantidadPuntos)
                     {
-                        bool bandera = false;
-                        while (bandera == false && columna < cantidadPuntos)
+                        if (!dígitosAgregados.Contains(pobContraria[a + intercambio, columna]))
                         {
-                            int valorActual = pobContraria[fila, columna];
-
-                            if (!EsDuplicado(a, valorActual, punto, pobContraria))
-                            {
-                                pob[a, b] = valorActual;
-                                bandera = true;
-                            }
-                            else
-                            {
-                                columna++;
-                            }
+                            pob[a, b] = pobContraria[a + intercambio, columna];
+                            bandera = true;
                         }
-                        columna++;
+                        else
+                        {
+                            columna++;
+                        }
                     }
+                    columna++;
                 }
             }
-        }
-
-        private bool EsDuplicado(int a, int valor, int punto, int[,] pobContraria)
-        {
-            for (int col = 1; col <= punto; col++)
-            {
-                if (pobContraria[a, col] != 0)
-                {
-                    if (pobContraria[a, col] == valor)
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
         }
 
         private int[] ObtenerS1yS2()
