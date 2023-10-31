@@ -535,14 +535,16 @@ namespace ProyectoGenetico
                     }
                     else if (cruzamiento == TipoCruzamiento.OBX)
                     {
-                        OrderBaseCrossover(true, 1, pob, pobContraria);
-                        OrderBaseCrossover(false, -1, pob, pobContraria);
+                        var máscara = CrearMáscara();
+                        OrderBaseCrossover(true, 1, máscara, pob, pobContraria);
+                        OrderBaseCrossover(false, -1, máscara, pob, pobContraria);
                         return true;
                     }
                     else if (cruzamiento == TipoCruzamiento.PPX)
                     {
-                        PrecedencePreservativeCrossover(true, 1, pob, pobContraria);
-                        PrecedencePreservativeCrossover(false, -1, pob, pobContraria);
+                        var máscara = CrearMáscara();
+                        PrecedencePreservativeCrossover(true, 1, máscara, pob, pobContraria);
+                        PrecedencePreservativeCrossover(false, -1, máscara, pob, pobContraria);
                         return true;
                     }
                     else
@@ -623,10 +625,9 @@ namespace ProyectoGenetico
             }
         }
 
-        private void PrecedencePreservativeCrossover(bool esPar, int intercambio, int[,] pob, int[,] pobContraria)
+        private void PrecedencePreservativeCrossover(bool esPar, int intercambio, int[] máscara, int[,] pob, int[,] pobContraria)
         {
             int parImpar = esPar ? 0 : 1;
-            var máscara = CrearMáscara();
 
             for (int a = parImpar; a < cantPoblación; a += 2)
             {
@@ -676,10 +677,9 @@ namespace ProyectoGenetico
             }
         }
 
-        private void OrderBaseCrossover(bool esPar, int intercambio, int[,] pob, int[,] pobContraria)
+        private void OrderBaseCrossover(bool esPar, int intercambio, int[] máscara, int[,] pob, int[,] pobContraria)
         {
-            int parImpar = esPar ? 0 : 1;
-            var máscara = CrearMáscara();
+            int parImpar = esPar ? 0 : 1;            
 
             for (int a = parImpar; a < cantPoblación; a += 2)
             {
