@@ -15,8 +15,10 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Win32;
 using Newtonsoft.Json;
 using OfficeOpenXml;
+using ProyectoGenetico.Properties;
 
 namespace ProyectoGenetico
 {
@@ -42,6 +44,8 @@ namespace ProyectoGenetico
 
     public partial class MainWindow : Window
     {
+        private string rutaArchivo = string.Empty;
+
         private List<(int, int)> coordenadas = new List<(int, int)>();
         private bool primerPunto = true;
         private string matrizMostrar = "";
@@ -1090,15 +1094,20 @@ namespace ProyectoGenetico
                 seAñadióPunto = true;
                 primerPunto = false;
             }
-            //string ub = Directory.GetCurrentDirectory();
-            //MessageBox.Show(ub);
+
+            if (string.IsNullOrEmpty(Settings.Default.RutaExcel))
+            {
+                SolicitudExcel();
+            }
+            else if (RevisarExcel() == false)
+            {
+                SolicitudExcel();
+            }
         }
         #endregion
 
         private async Task GuardarDatosExcel(int aptitud, string tiempo, int f, int c)
         {
-            string rutaArchivo = "D:\\Escuela\\7 Semestre\\Algoritmos metaheuristicos\\Exps.xlsx";
-
             using (var package = new ExcelPackage(new FileInfo(rutaArchivo)))
             {
                 var worksheetAptitud = package.Workbook.Worksheets[0];
@@ -1109,6 +1118,35 @@ namespace ProyectoGenetico
 
                 await package.SaveAsync();
             }
+        }
+
+        private void SolicitudExcel()
+        {
+            MessageBox.Show("Seleccione el archivo Excel donde se guardarán los datos", "Advertencia", MessageBoxButton.OK, MessageBoxImage.Information);
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Archivos EXCEL|*.xlsx|Todos los archivos|*.*";
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                Settings.Default.RutaExcel = openFileDialog.FileName;
+                Settings.Default.Save();
+
+                rutaArchivo = openFileDialog.FileName;
+            }
+            else
+            {
+                MessageBox.Show("No se seleccionó ningún archivo.");
+                btnEjecutar.IsEnabled = false;
+            }
+        }
+
+        private bool RevisarExcel()
+        {
+            if (File.Exists(Settings.Default.RutaExcel))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
